@@ -1,0 +1,4 @@
+This is the README for TRIE
+
+I will attempt to use the BOOST library to create a TRIE
+The goal is to create a graph of legal scrabble words for fast look up
