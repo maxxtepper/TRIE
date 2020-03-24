@@ -1,5 +1,5 @@
-#ifndef TRIE_SRC_LIB_H_
-#define TRIE_SRC_LIB_H_
+#ifndef TRIE_SRC_LIB_TRIE_H_
+#define TRIE_SRC_LIB_TRIE_H_
 
 #include <string>
 #include <unordered_set>
