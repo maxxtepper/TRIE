@@ -1,3 +1,13 @@
+The Main Goal:
+TrieNode is going to become a wrapper class around the following:
+Base = Node
+Derived = Child, Term
+
+Node is going to be the same as a child, it's just going to start off as not a child
+The root node is specifically not a child node, whereas every other node in the structure is either a child node, or a term node.
+A node is the fundamental starting point to a trie graph strucure: importantly, it holds no information directly. It does, however, hold the first letter information of every word in the trie.
+
+
 This is the README for TRIE
 The goal is to create a graph of legal scrabble words for fast look up
 
