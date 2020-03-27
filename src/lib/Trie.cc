@@ -1,18 +1,18 @@
 #include "Trie.h"
 
-Trie::Trie() : root_(std::make_unique<TrieNode>('#')) {
+Trie::Trie() : root_(std::make_unique<Node>('#')) {
 }
 
-std::unique_ptr<TrieNode> Trie::AddWord(const std::string &word) {
+bool Trie::AddWord(const std::string &word) {
 	//	Main method for TRIE building
 	//	Loop through each char in the word
 	if (word.size() < 1) return false;
 
 	uint8_t letter = 0;
-	return (TryAddLetters_(std::move(root_), word, letter));
+	return (TryAddLetters_(std::move(trie_root_), word, letter));
 }
 
-std::unique_ptr<TrieNode> Trie::TryAddLetters_(std::unique_ptr<TrieNode> node, const std::string &word, uint8_t letter) {
+std::unique_ptr<Node> Trie::TryAddLetters_(std::unique_ptr<Node> node, const std::string &word, uint8_t letter) {
 	//	End of word reached
 	if (letter == word.size()) { 
 		return (AddLetters_(std::move(node), word, letter));
@@ -28,7 +28,7 @@ std::unique_ptr<TrieNode> Trie::TryAddLetters_(std::unique_ptr<TrieNode> node, c
 	}
 }
 
-std::unique_ptr<TrieNode> Trie::AddLetters_(std::unique_ptr<TrieNode> node, const std::string &word, uint8_t letter) {
+std::unique_ptr<Node> Trie::AddLetters_(std::unique_ptr<Node> node, const std::string &word, uint8_t letter) {
 	//	End of word check
 	if (letter == word.size()) { 
 		//	Add the terminating character
@@ -50,7 +50,7 @@ std::unique_ptr<TrieNode> Trie::AddLetters_(std::unique_ptr<TrieNode> node, cons
 	}
 }
 
-std::unique_ptr<TrieNode> Trie::TryWord(const std::string &word) {
+bool Trie::TryWord(const std::string &word) {
 	//	Main method for word searching
 	if (word.size() < 1) return false;
 

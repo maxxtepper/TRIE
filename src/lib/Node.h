@@ -10,6 +10,7 @@ class Node {
 
 	private:
 		char nval_;
+
 };
 
 #endif

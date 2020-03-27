@@ -6,29 +6,26 @@
 #include <algorithm>
 #include <memory>
 #include <unordered_map>
-
-struct TrieNode {
-	std::unordered_map<char,std::unique_ptr<TrieNode>> child;
-	char val;
-	TrieNode(char x) : val(x) {}
-	~TrieNode() = default;
-};
+#include "Node.h"
+#include "Root.h"
+#include "Child.h"
+#include "Term.h"
 
 class Trie {
 	public:
 		Trie();
 		~Trie() = default;
 
-		std::unique_ptr<TrieNode> AddWord(const std::string &word);
-		std::unique_ptr<TrieNode> TryWord(const std::string &word);
+		bool AddWord(const std::string &word);
+		bool TryWord(const std::string &word);
 		
 	private:
-		//	This is the root unique node pointer to the trie
-		std::unique_ptr<TrieNode> root_;
+		//	This is the root node pointer to the trie
+		std::unique_ptr<Root> trie_root_;
 
-		std::unique_ptr<TrieNode> AddLetters_(std::unique_ptr<TrieNode> node, const std::string &word, uint8_t letter);
-		std::unique_ptr<TrieNode> TryAddLetters_(std::unique_ptr<TrieNode> node, const std::string &word, uint8_t letter);
-		std::unique_ptr<TrieNode> TryLetters_(std::unique_ptr<TrieNode> node, const std::string &word, uint8_t letter);
+		std::unique_ptr<Node> AddLetters_(std::unique_ptr<Node> node, const std::string &word, uint8_t letter);
+		std::unique_ptr<Node> TryAddLetters_(std::unique_ptr<Node> node, const std::string &word, uint8_t letter);
+		std::unique_ptr<Node> TryLetters_(std::unique_ptr<Node> node, const std::string &word, uint8_t letter);
 
 };
 
