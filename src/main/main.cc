@@ -1,7 +1,8 @@
 #include <iostream>
-#include "Trie.h"
+//#include "src/lib/Trie.h"
 
 int main(int argc, char** argv) {
+	/*
 	std::string word_file = argv[2];
 
 	Trie trie(word_file);
@@ -14,6 +15,7 @@ int main(int argc, char** argv) {
 
 		std::cout << trie.FindWord(input) << std::endl;
 	}
+	*/
 
 	return 0;
 }

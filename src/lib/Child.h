@@ -1,6 +1,8 @@
 #ifndef TRIE_SRC_LIB_CHILD_H_
 #define TRIE_SRC_LIB_CHILD_H_
 
+#include <memory>
+#include <unordered_map>
 #include "Node.h"
 
 class Child {

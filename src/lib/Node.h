@@ -3,13 +3,13 @@
 
 class Node {
 	public:
-		virtual Node(const char n) : nval_(n) {}
+		Node(const char n) : val_(n) {}
 		virtual ~Node() = default;
 
-		virtual GetChar() { return nval_; }
+		virtual char GetChar() { return val_; }
 
 	private:
-		char nval_;
+		char val_;
 
 };
 

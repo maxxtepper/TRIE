@@ -21,11 +21,11 @@ class Trie {
 		
 	private:
 		//	This is the root node pointer to the trie
-		std::unique_ptr<Root> trie_root_;
+		std::unique_ptr<Node> trie_root_;
 
-		std::unique_ptr<Node> AddLetters_(std::unique_ptr<Node> node, const std::string &word, uint8_t letter);
-		std::unique_ptr<Node> TryAddLetters_(std::unique_ptr<Node> node, const std::string &word, uint8_t letter);
-		std::unique_ptr<Node> TryLetters_(std::unique_ptr<Node> node, const std::string &word, uint8_t letter);
+		bool AddLetters_(std::unique_ptr<Node> &node, const std::string &word, uint8_t letter);
+		bool TryAddLetters_(std::unique_ptr<Node> &node, const std::string &word, uint8_t letter);
+		bool TryLetters_(std::unique_ptr<Node> &node, const std::string &word, uint8_t letter);
 
 };
 
