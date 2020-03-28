@@ -19,7 +19,7 @@ bool Trie::TryAddLetters_(std::unique_ptr<Node> &node, const std::string &word, 
 	}
 
 	//	Try the letter of the node's child
-	if (node->child.count(letter)) {
+	if (node.TryChar(letter)) {
 			//	The letter is in the tree, traverse
 			return (TryAddLetters_(node->child[word[letter]], word, letter++));
 	} else {

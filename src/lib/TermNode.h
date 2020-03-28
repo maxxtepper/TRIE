@@ -1,14 +1,14 @@
-#ifndef TRIE_SRC_LIB_TERM_H_
-#define TRIE_SRC_LIB_TERM_H_
+#ifndef TRIE_SRC_LIB_TERMNODE_H_
+#define TRIE_SRC_LIB_TERMNODE_H_
 
 #include <memory>
 #include <unordered_map>
-#include "Term.h"
+#include "TermNode.h"
 
-class Term {
+class TermNode {
 	public:
-		Term();
-		~Term();
+		TermNode();
+		~TermNode();
 
 	private:
 };

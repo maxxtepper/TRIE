@@ -3,8 +3,8 @@
 #include "src/lib/Node.h"
 
 TEST(NodeShould, ReturnSomething){
-	std::unique_ptr<Node> node = std::make_unique<Node>();
-	std::string actual = node->DoSomething();
-	std::string expected = Something;
+	char expected = 'a';
+	std::unique_ptr<Node> node = std::make_unique<Node>(expected);
+	char actual = node->GetChar();
 	EXPECT_EQ(expected, actual);
 }

@@ -1,7 +1,7 @@
-#include "Term.h"
+#include "TermNode.h"
 
-Term::Term() {
+TermNode::TermNode() {
 }
 
-Term::~Term() {
+TermNode::~TermNode() {
 }

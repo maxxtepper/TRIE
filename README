@@ -1,57 +1,19 @@
 The Main Goal:
-TrieNode is going to become a wrapper class around the following:
 Base = Node
-Derived = Child, Term
-
-Node is going to be the same as a child, it's just going to start off as not a child
-The root node is specifically not a child node, whereas every other node in the structure is either a child node, or a term node.
-A node is the fundamental starting point to a trie graph strucure: importantly, it holds no information directly. It does, however, hold the first letter information of every word in the trie.
-
+Derived = TrieNode, TermNode
 
 This is the README for TRIE
 The goal is to create a graph of legal scrabble words for fast look up
 
-Base Class: Node
-Derived Classes: Root, Child, Terminator
-
-The TrieNode struct is turning into the Child object of the base class Node.
-The TrieNode object, known as the child of the RootNode object, is the only type of node that can hold alpha characters.
-The RootNode object will hold the root character.
-The TermNode object will hold the term character.
-
-Root.Node
-Trie.Node
-Term.Node
-
-Trie.Root.Node
-Trie.Child.Node
-Trie.Term.Node
-
-So the labeling:
-
-class TrieNode {
-	//	This is the node of the TrieNode
-	unique_ptr<Node> trie_node_;
-};
-
 class Node {
 	//	Every node has its own char
 	char nval;
-	//	Every node has its own node
-	unique_ptr<Node> node_;
 };
 
-class Root : Node {
-	//	These are the first letters of all words
-	std::unordered_map<char,std::unique_ptr<Node>> child;
-};
-
-class Child : Node {
-	//	Every Child is holding Children
-	std::unordered_map<char,std::unique_ptr<Node>> child;
+class TrieNode {
+	//	This has a map of children
 };
 
 class Term : Node {
-	//	The term only terms, it needs no map
-	Term(int x) : nval(x='*') {}
+	//	This has no map
 };

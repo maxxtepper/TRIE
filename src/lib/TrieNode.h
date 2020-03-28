@@ -11,6 +11,7 @@ class TrieNode : public Node {
 		~TrieNode();
 
 		virtual char GetChar();
+		virtual char TryChar(char letter);
 	private:
 		std::unordered_map<char,std::unique_ptr<Node>> child_;
 };
