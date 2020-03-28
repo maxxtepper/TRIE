@@ -7,7 +7,6 @@
 #include <memory>
 #include <unordered_map>
 #include "Node.h"
-#include "TrieNode.h"
 #include "TermNode.h"
 
 class Trie {
