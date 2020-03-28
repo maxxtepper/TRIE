@@ -1,14 +1,14 @@
-#ifndef TRIE_SRC_LIB_ROOT_H_
-#define TRIE_SRC_LIB_ROOT_H_
+#ifndef TRIE_SRC_LIB_TRIENODE_H_
+#define TRIE_SRC_LIB_TRIENODE_H_
 
 #include <memory>
 #include <unordered_map>
 #include "Node.h"
 
-class Root : public Node {
+class TrieNode : public Node {
 	public:
-		Root(char n) : Node(n) {}
-		~Root();
+		TrieNode(char n) : Node(n) {}
+		~TrieNode();
 
 		virtual char GetChar();
 	private:

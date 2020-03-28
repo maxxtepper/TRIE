@@ -7,9 +7,8 @@
 #include <memory>
 #include <unordered_map>
 #include "Node.h"
-#include "Root.h"
-#include "Child.h"
-#include "Term.h"
+#include "TrieNode.h"
+#include "TermNode.h"
 
 class Trie {
 	public:

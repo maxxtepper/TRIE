@@ -1,6 +1,6 @@
 #include "Trie.h"
 
-Trie::Trie() : trie_root_(std::make_unique<Root>('#')) {
+Trie::Trie() : trie_root_(std::make_unique<TrieNode>('#')) {
 }
 
 bool Trie::AddWord(const std::string &word) {
