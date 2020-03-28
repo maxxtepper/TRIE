@@ -6,10 +6,10 @@ class Node {
 		Node(const char n) : val_(n) {}
 		virtual ~Node() = default;
 
-		virtual char GetChar() { return val_; }
+		char GetChar() { return val_; }
 
 	private:
-		char val_;
+		const char val_;
 
 };
 

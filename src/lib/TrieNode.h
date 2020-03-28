@@ -11,14 +11,12 @@
 
 class TrieNode : public Node {
 	public:
-		TrieNode(char n) : Node(n) {}
-		~TrieNode();
+		TrieNode(const char n) : Node(n) {}
+		~TrieNode() = default;
 
 		bool AddWord(const std::string &word);
 		bool TryWord(const std::string &word);
 
-		virtual char GetChar();
-		virtual char TryChar(char letter);
 	private:
 		std::unordered_map<char,std::unique_ptr<Node>> child_;
 
