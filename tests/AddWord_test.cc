@@ -1,6 +1,6 @@
 #include <memory>
 #include "gtest/gtest.h"
-#include "src/lib/Trie.h"
+#include "src/lib/TrieNode.h"
 
 TEST(AddTryShould, AddTry){
 	/*

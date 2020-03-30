@@ -3,12 +3,16 @@
 
 #include <memory>
 #include <unordered_map>
-#include "TermNode.h"
+#include "Node.h"
 
-class TermNode {
+class TermNode : public Node {
 	public:
-		TermNode();
-		~TermNode();
+		TermNode(const char n) : Node(n) {}
+		~TermNode() = default;
+
+		virtual bool AddLetters(const std::string &word, uint8_t letter);
+		virtual bool TryAddLetters(const std::string &word, uint8_t letter);
+		virtual bool TryLetters(const std::string &word, uint8_t letter);
 
 	private:
 };

@@ -17,12 +17,12 @@ class TrieNode : public Node {
 		bool AddWord(const std::string &word);
 		bool TryWord(const std::string &word);
 
+		virtual bool AddLetters(const std::string &word, uint8_t letter);
+		virtual bool TryAddLetters(const std::string &word, uint8_t letter);
+		virtual bool TryLetters(const std::string &word, uint8_t letter);
+
 	private:
 		std::unordered_map<char,std::unique_ptr<Node>> child_;
-
-		bool AddLetters_(std::unique_ptr<Node> &node, const std::string &word, uint8_t letter);
-		bool TryAddLetters_(std::unique_ptr<Node> &node, const std::string &word, uint8_t letter);
-		bool TryLetters_(std::unique_ptr<Node> &node, const std::string &word, uint8_t letter);
 };
 
 #endif

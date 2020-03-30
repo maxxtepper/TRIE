@@ -1,7 +1,13 @@
 #include "TermNode.h"
 
-TermNode::TermNode() {
+bool TermNode::AddLetters(const std::string &word, uint8_t letter) {
+	return true;
 }
 
-TermNode::~TermNode() {
+bool TermNode::TryAddLetters(const std::string &word, uint8_t letter) {
+	return true;
+}
+
+bool TermNode::TryLetters(const std::string &word, uint8_t letter) {
+	return true;
 }

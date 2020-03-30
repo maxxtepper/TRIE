@@ -1,63 +1,70 @@
-#include "TrieNode.h"
-
-bool Trie::AddWord(const std::string &word) {
+#include "TrieNode.h" 
+bool TrieNode::AddWord(const std::string &word) {
 	//	Main method for TRIE building
 	//	Loop through each char in the word
 	if (word.size() < 1) return false;
 
 	uint8_t letter = 0;
-	return (TryAddLetters_(this, word, letter));
+	return (this->TryAddLetters(word, letter));
 }
 
-bool Trie::TryAddLetters_(std::unique_ptr<Node> &node, const std::string &word, uint8_t letter) {
+bool TrieNode::TryAddLetters(const std::string &word, uint8_t letter) {
 	//	End of word reached
 	if (letter == word.size()) { 
-		return (AddLetters_(node, word, letter));
+		//	This means the word could not be added
+		return false;
 	}
 
 	//	Try the letter of the node's child
-	if (child_->count(letter)) {
+	if (child_.count(letter)) {
 			//	The letter is in the tree, traverse
-			return (TryAddLetters_(child_[letter], word, letter++));
+			int temp_letter = letter;
+			return (child_[temp_letter]->TryAddLetters(word, letter++));
 	} else {
 		//	The letter is not in the tree
-		return (AddLetters_(node,word,letter));
+		return (child_[letter]->AddLetters(word,letter));
 	}
 }
 
-bool Trie::AddLetters_(std::unique_ptr<Node> &node, const std::string &word, uint8_t letter) {
+bool TrieNode::AddLetters(const std::string &word, uint8_t letter) {
 	//	End of word check
 	if (letter == word.size()) { 
 		//	Add the terminating character
 		std::unique_ptr<Node> term_node = std::make_unique<TermNode>('*');
-		child_->insert(std::make_pair('*',term_node));
+		child_.insert(std::make_pair('*',std::move(term_node)));
 		return true;
 	}
 
 	//	Add the letter
-	std::unique_ptr<Node> child_node = std::make_unique<TrieNode>(letter);
-	child_->insert(std::make_pair(word[letter],child_node));
+	std::unique_ptr<Node> child_node = std::make_unique<TrieNode>(word[letter]);
+	child_.insert(std::make_pair(word[letter],std::move(child_node)));
 
 	//	Add the next letter
-	return (AddLetters_(child_node,word,letter++));
+	int temp_letter = letter;
+	return (child_[word[temp_letter]]->AddLetters(word,letter++));
 }
 
-bool Trie::TryWord(const std::string &word) {
+bool TrieNode::TryWord(const std::string &word) {
 	//	Main method for word searching
 	if (word.size() < 1) return false;
 
 	uint8_t letter = 0;
-	return (TryLetters_(this, word, letter));
+	return (this->TryLetters(word, letter));
 }
 
-bool Trie::TryLetters_(std::unique_ptr<TrieNode> &node, const std::string &word, uint8_t letter) {
+bool TrieNode::TryLetters(const std::string &word, uint8_t letter) {
 	//	End of word reached
-	if (word[letter] == '*') { return true; }
+	if (letter == word.size()) { 
+		if (child_.count('*'))
+			return true;
+		else return false;
+	}
 
 	//	Try the letter of the node's child
-	if (child_->count(letter)) {
+	if (child_.count(word[letter])) {
 			//	The letter is in the tree, traverse
-			return (TryLetters_(child_[letter], word, letter++));
+			int temp_letter = letter;
+			return (child_[temp_letter]->TryLetters(word, letter++));
 	} else {
 		//	The letter is not in the tree
 		return false;
