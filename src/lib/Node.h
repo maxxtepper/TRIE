@@ -10,9 +10,9 @@ class Node {
 
 		char GetChar() { return val_; }
 
-		virtual bool AddLetters(const std::string &word, uint8_t letter) = 0;
-		virtual bool TryAddLetters(const std::string &word, uint8_t letter) = 0;
-		virtual bool TryLetters(const std::string &word, uint8_t letter) = 0;
+		virtual bool AddLetters(const std::string &word, uint16_t letter) = 0;
+		virtual bool TryAddLetters(const std::string &word, uint16_t letter) = 0;
+		virtual bool TryLetters(const std::string &word, uint16_t letter) = 0;
 
 	private:
 		const char val_;

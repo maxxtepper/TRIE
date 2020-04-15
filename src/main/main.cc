@@ -1,21 +1,28 @@
 #include <iostream>
-//#include "src/lib/Trie.h"
+#include "src/lib/TrieNode.h"
 
 int main(int argc, char** argv) {
-	/*
 	std::string word_file = argv[2];
 
-	Trie trie(word_file);
+	TrieNode trie('#');
 	
-	char input = NULL;
-	while (input != '0') {
-		std::cout << "Search: ";
+	std::string input;
+	while (input != "0") {
+		std::cout << "Add a word(0 to stop): ";
 		std::cin >> input;
 		std::cout << std::endl;
-
-		std::cout << trie.FindWord(input) << std::endl;
+		if (input != "0")
+			std::cout << (bool)trie.AddWord(input) << std::endl;
 	}
-	*/
+
+	input = "1";
+	while (input != "0") {
+		std::cout << "Try a word(0 to stop): ";
+		std::cin >> input;
+		std::cout << std::endl;
+		if (input != "0")
+			std::cout << (bool)trie.TryWord(input) << std::endl;
+	}
 
 	return 0;
 }

@@ -10,9 +10,9 @@ class TermNode : public Node {
 		TermNode(const char n) : Node(n) {}
 		~TermNode() = default;
 
-		virtual bool AddLetters(const std::string &word, uint8_t letter);
-		virtual bool TryAddLetters(const std::string &word, uint8_t letter);
-		virtual bool TryLetters(const std::string &word, uint8_t letter);
+		virtual bool AddLetters(const std::string &word, uint16_t letter);
+		virtual bool TryAddLetters(const std::string &word, uint16_t letter);
+		virtual bool TryLetters(const std::string &word, uint16_t letter);
 
 	private:
 };
