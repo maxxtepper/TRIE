@@ -6,3 +6,8 @@ $ git clone https://github.com/zeisler/scrabble
 
 I am using scrabble/db/dictionary.csv
 I needed to convert it from dos to unix
+
+Upcoming:
+-Prefix searching
+-Suffix searching
+-Word jumping
