@@ -1,19 +1,8 @@
-The Main Goal:
-Base = Node
-Derived = TrieNode, TermNode
+This is a basic TRIE data structure
 
-This is the README for TRIE
-The goal is to create a graph of legal scrabble words for fast look up
+Right now, I am using it to load the dictionary of legal scrabble words
 
-class Node {
-	//	Every node has its own char
-	char nval;
-};
+$ git clone https://github.com/zeisler/scrabble
 
-class TrieNode {
-	//	This has a map of children
-};
-
-class Term : Node {
-	//	This has no map
-};
+I am using scrabble/db/dictionary.csv
+I needed to convert it from dos to unix
