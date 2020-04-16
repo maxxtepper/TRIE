@@ -86,6 +86,11 @@ TEST(TrieNodeShould, ReturnSomething){
 	bool expected13 = true; 
 	bool actual13 = trienode->AddWord(word);
 	EXPECT_EQ(expected13, actual13);
+
+	//	Get count
+	uint64_t expected14 = 17; 
+	uint64_t actual14 = trienode->Count();
+	EXPECT_EQ(expected14, actual14);
 	/*
 	*/
 }
