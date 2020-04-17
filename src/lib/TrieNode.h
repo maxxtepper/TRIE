@@ -12,11 +12,13 @@
 
 class TrieNode : public Node {
 	public:
-		TrieNode(const char n) : Node(n) {}
+		TrieNode(const char n) : Node(n), word_("") {}
 		~TrieNode() = default;
 
 		bool AddWord(const std::string &word);
 		bool TryWord(const std::string &word);
+
+		std::string GetWord() { return word_; }
 		uint64_t Count() { return node_count; }
 
 		virtual bool AddLetters(const std::string &word, uint16_t letter);
@@ -26,7 +28,14 @@ class TrieNode : public Node {
 		static uint64_t node_count;
 
 	private:
+		//	The children nodes
 		std::unordered_map<char,std::unique_ptr<Node>> child_;
+
+		//	The string up to this point
+		std::string word_;
+
+		//	The output words up to this point
+		std::vector<std::string> list_;
 };
 
 #endif

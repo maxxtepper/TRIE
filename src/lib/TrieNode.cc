@@ -45,10 +45,13 @@ bool TrieNode::AddLetters(const std::string &word, uint16_t letter) {
 		return true;
 	}
 
-	//	Add the letter
+	//	Add the letter to child
 	std::unique_ptr<Node> child_node = std::make_unique<TrieNode>(word[letter]);
 	auto letter_ptr_pair = std::make_pair(word[letter],std::move(child_node));
 	child_.insert(std::move(letter_ptr_pair));
+	//	Add the letter to word
+	word_ += word[letter];
+	//	Count this new node
 	node_count++;
 
 	//	Add the next letter
