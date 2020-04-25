@@ -1,4 +1,10 @@
 #include "TrieNode.h" 
+
+TrieNode::TrieNode(const char n) : Node(n), word_("") {
+	//	Create word list
+	word_list_ = std::make_unique<std::vector<std::string>>();
+}
+
 bool TrieNode::AddWord(const std::string &word) {
 	//	Main method for TRIE building
 	//	Loop through each char in the word
@@ -42,13 +48,22 @@ bool TrieNode::AddLetters(const std::string &word, uint16_t letter) {
 		std::unique_ptr<Node> term_node = std::make_unique<TermNode>('*');
 		auto letter_ptr_pair = std::make_pair('*', std::move(term_node));
 		child_.insert(std::move(letter_ptr_pair));
+		//	Add the letters up to this point to the word
+		if (word_ != word)
+			for (uint16_t i=0; i<letter; i++)
+				word_.push_back(word[i]);
 		return true;
 	}
 
-	//	Add the letter
+	//	Add the letter to child
 	std::unique_ptr<Node> child_node = std::make_unique<TrieNode>(word[letter]);
 	auto letter_ptr_pair = std::make_pair(word[letter],std::move(child_node));
 	child_.insert(std::move(letter_ptr_pair));
+	//	Add the letters up to this point to the word
+	for (uint16_t i=0; i<letter; i++)
+		word_.push_back(word[i]);
+	//	Count this new node
+	node_count_++;
 
 	//	Add the next letter
 	int temp_letter = letter;
@@ -81,3 +96,66 @@ bool TrieNode::TryLetters(const std::string &word, uint16_t letter) {
 		return false;
 	}
 }
+
+WordList TrieNode::GetList(const std::string &word) {
+	//	Traverse every word up to the input substring
+	if (word.size() < 1) return nullptr;
+
+	//	Run the search
+	uint16_t letter = 0;
+	bool list_made = TryPrefix(word, letter);
+
+	//	Output the result
+	if (list_made)
+		return std::move(word_list_);
+	else return nullptr;
+}
+
+bool TrieNode::TryPrefix(const std::string &word, uint16_t letter) {
+	std::cout << "Letter: " << letter << "; Word: " << word << std::endl;
+	this->PrintChildren();
+	//	Traverse trie until substring found
+	if (letter == word.size()-1) {
+		if (child_.count(word[letter])) {
+			std::cout << "Gonna get words for " << word << std::endl;
+			return (child_[word[letter]]->GetWords(word, letter));
+		} else return false;
+	}
+
+	//	Traverse trie until substring not found
+	if (!child_.count(word[letter])) {
+		//	This substring is not in the trie
+		return false;
+	} else {
+		//	Test the next letter
+		uint16_t letter_new = letter++;
+		return (child_[word[letter]]->TryPrefix(word, letter_new));
+	}
+}
+
+bool TrieNode::GetWords(const std::string &word, uint16_t letter) {
+	//	Get the iter
+	auto itr = child_.begin();
+
+	std::cout << "Gonna iterate for " << word << std::endl;
+	//	This is going to check every node for a TrieTerm
+	if (itr->first == '*') {
+		//	The term is here -> add the word to the list
+		std::cout << "Adding word " << this->GetWord() << std::endl;
+		word_list_->push_back(this->GetWord());
+	}
+	itr++;
+
+	//	Traverse every child
+	for (; itr != child_.end(); itr++)
+		itr->second->GetWords(word, ++letter);
+
+	return true;
+}
+
+void TrieNode::PrintChildren() {
+	for (auto itr = child_.begin(); itr != child_.end(); ++itr)
+		std::cout << itr->first << std::endl;
+}
+
+uint64_t TrieNode::node_count_ = 0;

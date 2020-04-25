@@ -8,6 +8,7 @@ I am using scrabble/db/dictionary.csv
 I needed to convert it from dos to unix
 
 Upcoming:
+-Save strings in nodes
 -Prefix searching
 -Suffix searching
 -Word jumping
