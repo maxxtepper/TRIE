@@ -2,7 +2,7 @@
 #include "gtest/gtest.h"
 #include "src/lib/TrieNode.h"
 
-TEST(TrieNodeShould, ReturnSomething){
+TEST(TrieNodeShould, BuildTheTrie){
 	//	Create trie with no children
 	char expected0 = '#';
 	std::unique_ptr<TrieNode> trienode = std::make_unique<TrieNode>(expected0);
@@ -91,6 +91,62 @@ TEST(TrieNodeShould, ReturnSomething){
 	uint64_t expected14 = 17; 
 	uint64_t actual14 = trienode->Count();
 	EXPECT_EQ(expected14, actual14);
+}
+
+TEST(TrieShould, GetWords){
+	//	Create trie with no children
+	char expected0 = '#';
+	std::unique_ptr<TrieNode> trienode = std::make_unique<TrieNode>(expected0);
+	char actual0 = trienode->GetChar();
+	EXPECT_EQ(expected0, actual0);
+	
+	//	Add words to trie
+	std::vector<std::string> words;
+	words.push_back("hello");
+	words.push_back("hell");
+	words.push_back("helix");
+	words.push_back("help");
+	words.push_back("helm");
+	words.push_back("helmet");
+	words.push_back("hi");
+	words.push_back("bye");
+	for (auto itr = words.begin(); itr != words.end(); ++itr) {
+		trienode->AddWord(*itr);
+	//	std::cout << "Added " << *itr << std::endl;
+	}
+
+	//	Test with hello
+	std::string word = "hello";
+	bool expected1 = true;
+	bool actual1 = trienode->TryWord(word);
+	EXPECT_EQ(expected1, actual1);
+
+	//	Get List
+	std::string prefix = "hel";
+	WordList expected2 = std::make_unique<std::vector<std::string>>();
+	expected2->push_back("helix");
+	expected2->push_back("hell");
+	expected2->push_back("hello");
+	expected2->push_back("helm");
+	expected2->push_back("helmet");
+	expected2->push_back("help");
+	for (auto itr = expected2->begin(); itr != expected2->end(); ++itr)
+		std::cout << "Expected got " << *itr << std::endl;
+
+	WordList actual2 = trienode->GetList(prefix);
+	/*
+	for (auto itr = actual2->begin(); itr != actual2->end(); ++itr)
+		std::cout << "GetList got " << *itr << std::endl;
+			*/
+	if (actual2 == nullptr)
+		std::cout << "GetList returned nullptr\n";
+	else {
+		std::cout << "In the else...\n";
+		for (auto itr = actual2->begin(); itr != actual2->end(); ++itr)
+			std::cout << "GetList got " << *itr << std::endl;
+	}
+	//EXPECT_EQ(expected2, actual2);
+	
 	/*
 	*/
 }

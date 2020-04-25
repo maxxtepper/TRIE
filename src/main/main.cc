@@ -5,7 +5,7 @@
 #include <vector>
 #include <chrono>
 #include <unistd.h>
-#include "src/lib/TrieNode.h"
+#include "src/lib/TrieNode.h
 
 int main(int argc, char** argv) {
 	std::string pwd;
@@ -16,6 +16,7 @@ int main(int argc, char** argv) {
 		std::cout << "ERROR! Could not find cwd!\n";
 		return -1;
 	}
+	std::cout << pwd << std::endl;
 
 	std::string word_file = argv[2];
 

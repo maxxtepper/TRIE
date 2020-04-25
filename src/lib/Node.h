@@ -10,9 +10,16 @@ class Node {
 
 		char GetChar() { return val_; }
 
-		virtual bool AddLetters(const std::string &word, uint16_t letter) = 0;
+		//	Add word to trie
 		virtual bool TryAddLetters(const std::string &word, uint16_t letter) = 0;
+		virtual bool AddLetters(const std::string &word, uint16_t letter) = 0;
+
+		//	Try the trie
 		virtual bool TryLetters(const std::string &word, uint16_t letter) = 0;
+
+		//	Give a prefix, get a list
+		virtual bool TryPrefix(const std::string &word, uint16_t letter) = 0;
+		virtual bool GetWords(const std::string &word, uint16_t letter) = 0;
 
 	private:
 		const char val_;
