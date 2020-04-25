@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
 	TrieNode trie('#');
 
 	std::stringstream ss;
-	std::ifstream my_file("dictionary.csv");
+	std::ifstream my_file("twl2016.csv");
 
 	if (my_file.is_open()) {
 		std::string line;
@@ -28,7 +28,7 @@ int main(int argc, char** argv) {
 			std::string word;
 			ss << line;
 			std::getline(ss,word);
-			std::cout << "Adding word: " << word << std::endl;
+			//std::cout << "Adding word: " << word << std::endl;
 			trie.AddWord(word);
 			ss.clear();
 		}
@@ -53,8 +53,13 @@ int main(int argc, char** argv) {
 	while (input != "0") {
 		std::cout << "Try a word (0 to quit): ";
 		std::cin >> input;
-		if (input != "0")
-			std::cout << (bool)trie.TryWord(input) << std::endl;
+		if (input != "0") {
+			bool isWord = trie.TryWord(input);
+			if (isWord)
+				std::cout << input << " IS a word\n";
+			else
+				std::cout << input << " is NOT a word\n";
+		}
 	}
 
 	return 0;
