@@ -12,10 +12,10 @@ bool TermNode::TryLetters(const std::string &word, uint16_t letter) {
 	return true;
 }
 
-bool TermNode::TryPrefix(const std::string &word, uint16_t letter) {
+bool TermNode::TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
 	return true;
 }
 
-bool TermNode::GetWords(const std::string &word, uint16_t letter) {
+bool TermNode::GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
 	return true;
 }

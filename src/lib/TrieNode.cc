@@ -1,8 +1,6 @@
 #include "TrieNode.h" 
 
-TrieNode::TrieNode(const char n) : Node(n), word_("") {
-	//	Create word list
-	word_list_ = std::make_unique<std::vector<std::string>>();
+TrieNode::TrieNode(const char n, const std::string word) : Node(n), word_(word) {
 }
 
 bool TrieNode::AddWord(const std::string &word) {
@@ -44,24 +42,23 @@ bool TrieNode::TryAddLetters(const std::string &word, uint16_t letter) {
 bool TrieNode::AddLetters(const std::string &word, uint16_t letter) {
 	//	End of word check
 	if (letter == word.size()) { 
-		//	Add the terminating character
-		std::unique_ptr<Node> term_node = std::make_unique<TermNode>('*');
-		auto letter_ptr_pair = std::make_pair('*', std::move(term_node));
-		child_.insert(std::move(letter_ptr_pair));
-		//	Add the letters up to this point to the word
-		if (word_ != word)
-			for (uint16_t i=0; i<letter; i++)
-				word_.push_back(word[i]);
-		return true;
+		//	Add the terminating character if the word is not already there
+		if (!child_.count('*')) {
+			std::unique_ptr<Node> term_node = std::make_unique<TermNode>('*');
+			auto letter_ptr_pair = std::make_pair('*', std::move(term_node));
+			child_.insert(std::move(letter_ptr_pair));
+			return true;
+		} else return false;
 	}
 
 	//	Add the letter to child
-	std::unique_ptr<Node> child_node = std::make_unique<TrieNode>(word[letter]);
+	std::string sub_word;
+	for (uint16_t i=0; i<letter+1; i++)
+		sub_word.push_back(word[i]);
+	std::unique_ptr<Node> child_node = std::make_unique<TrieNode>(word[letter], sub_word);
 	auto letter_ptr_pair = std::make_pair(word[letter],std::move(child_node));
 	child_.insert(std::move(letter_ptr_pair));
-	//	Add the letters up to this point to the word
-	for (uint16_t i=0; i<letter; i++)
-		word_.push_back(word[i]);
+
 	//	Count this new node
 	node_count_++;
 
@@ -97,28 +94,27 @@ bool TrieNode::TryLetters(const std::string &word, uint16_t letter) {
 	}
 }
 
-WordList TrieNode::GetList(const std::string &word) {
+std::unique_ptr<WordList> TrieNode::GetList(const std::string &word) {
 	//	Traverse every word up to the input substring
 	if (word.size() < 1) return nullptr;
 
+	std::unique_ptr<WordList> word_list = std::make_unique<WordList>();
+
 	//	Run the search
 	uint16_t letter = 0;
-	bool list_made = TryPrefix(word, letter);
+	bool list_made = TryPrefix(word, letter, word_list);
 
 	//	Output the result
 	if (list_made)
-		return std::move(word_list_);
+		return std::move(word_list);
 	else return nullptr;
 }
 
-bool TrieNode::TryPrefix(const std::string &word, uint16_t letter) {
-	std::cout << "Letter: " << letter << "; Word: " << word << std::endl;
-	this->PrintChildren();
+bool TrieNode::TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
 	//	Traverse trie until substring found
 	if (letter == word.size()-1) {
 		if (child_.count(word[letter])) {
-			std::cout << "Gonna get words for " << word << std::endl;
-			return (child_[word[letter]]->GetWords(word, letter));
+			return (child_[word[letter]]->GetWords(word, letter, word_list));
 		} else return false;
 	}
 
@@ -128,27 +124,26 @@ bool TrieNode::TryPrefix(const std::string &word, uint16_t letter) {
 		return false;
 	} else {
 		//	Test the next letter
-		uint16_t letter_new = letter++;
-		return (child_[word[letter]]->TryPrefix(word, letter_new));
+		uint16_t temp_letter = letter;
+		return (child_[word[temp_letter]]->TryPrefix(word, ++letter, word_list));
 	}
 }
 
-bool TrieNode::GetWords(const std::string &word, uint16_t letter) {
+bool TrieNode::GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
 	//	Get the iter
 	auto itr = child_.begin();
 
-	std::cout << "Gonna iterate for " << word << std::endl;
 	//	This is going to check every node for a TrieTerm
 	if (itr->first == '*') {
 		//	The term is here -> add the word to the list
-		std::cout << "Adding word " << this->GetWord() << std::endl;
-		word_list_->push_back(this->GetWord());
+		word_list->push_back(this->GetWord());
+		itr++;
 	}
-	itr++;
 
 	//	Traverse every child
-	for (; itr != child_.end(); itr++)
-		itr->second->GetWords(word, ++letter);
+	for (; itr != child_.end(); itr++) {
+		itr->second->GetWords(word, ++letter, word_list);
+	}
 
 	return true;
 }
