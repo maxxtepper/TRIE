@@ -5,7 +5,7 @@
 #include <vector>
 #include <chrono>
 #include <unistd.h>
-#include "src/lib/TrieNode.h
+#include "src/lib/TrieNode.h"
 
 int main(int argc, char** argv) {
 	std::string pwd;
@@ -20,7 +20,7 @@ int main(int argc, char** argv) {
 
 	std::string word_file = argv[2];
 
-	TrieNode trie('#');
+	TrieNode trie('#',"");
 //	std::vector<std::string> word_list;
 
 	std::stringstream ss;
@@ -102,6 +102,7 @@ int main(int argc, char** argv) {
 	std::cout << "Word Count: " << word_count << std::endl;
 	std::cout << "Node Count: " << trie.Count() << std::endl;
 
+<<<<<<< HEAD
 	std::string input = "1";
 	while (input != "0") {
 		std::cout << "Try a word (0 to quit): ";
@@ -117,7 +118,56 @@ int main(int argc, char** argv) {
 				std::cout << input << " IS a word\n";
 			else
 				std::cout << input << " is NOT a word\n";
+=======
+	while(true) {
+		std::string mode = "";
+		std::cout << "Welcome to the Scrabble Trie!\n";
+		std::cout << "Pick which mode you would like to play with: \n";
+		std::cout << "1. Try Words\n";
+		std::cout << "2. Get List\n";
+		std::cout << "0. Quit\n";
+		std::cout << "Choice: ";
+		std::cin >> mode;
+		std::cout << std::endl;
+		int choice = std::stoi(mode);
+		switch(choice) {
+			case 1:
+			{
+				std::string input = "";
+				while (input != "0") {
+					std::cout << "Try a word (0 to quit): ";
+					std::cin >> input;
+					if (input != "0") {
+						bool isAWord = trie.TryWord(input);
+						if (isAWord)
+							std::cout << input << " IS a word\n";
+						else
+							std::cout << input << " is NOT a word\n";
+					}
+				}
+				break;
+			}
+			case 2:
+			{
+				std::string input = "";
+				while (input != "0") {
+					std::cout << "Enter a word (0 to quit): ";
+					std::cin >> input;
+					if (input != "0") {
+						std::unique_ptr<WordList> word_list = trie.GetList(input);
+						if (word_list != nullptr)
+							std::for_each(word_list->begin(), word_list->end(), [](std::string i) {
+								std::cout << i << std::endl;
+							});
+						else
+							std::cout << "Empty List!\n";
+					}
+				}
+			}
+			default: break;
+>>>>>>> GetList
 		}
+		if (choice == 0) break;
 	}
 
 	my_file.close();

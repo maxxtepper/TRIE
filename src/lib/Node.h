@@ -1,7 +1,11 @@
 #ifndef TRIE_SRC_LIB_NODE_H_
 #define TRIE_SRC_LIB_NODE_H_
 
+#include <memory>
 #include <string>
+#include <vector>
+
+typedef std::vector<std::string> WordList;
 
 class Node {
 	public:
@@ -18,8 +22,8 @@ class Node {
 		virtual bool TryLetters(const std::string &word, uint16_t letter) = 0;
 
 		//	Give a prefix, get a list
-		virtual bool TryPrefix(const std::string &word, uint16_t letter) = 0;
-		virtual bool GetWords(const std::string &word, uint16_t letter) = 0;
+		virtual bool TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) = 0;
+		virtual bool GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) = 0;
 
 	private:
 		const char val_;

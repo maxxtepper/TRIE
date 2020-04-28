@@ -11,12 +11,10 @@
 #include "Node.h"
 #include "TermNode.h"
 
-typedef std::unique_ptr<std::vector<std::string>> WordList;
-
 class TrieNode : public Node {
 	public:
 
-		TrieNode(const char n);
+		TrieNode(const char n, const std::string word);
 		~TrieNode() = default;
 
 		//	Add word to trie
@@ -29,9 +27,9 @@ class TrieNode : public Node {
 		virtual bool TryLetters(const std::string &word, uint16_t letter);
 
 		//	Give a prefix, get a list
-		WordList GetList(const std::string &word);
-		virtual bool TryPrefix(const std::string &word, uint16_t letter);
-		virtual bool GetWords(const std::string &word, uint16_t letter);
+		std::unique_ptr<WordList> GetList(const std::string &word);
+		virtual bool TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
+		virtual bool GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
 
 		//	Object Essentials
 		std::string GetWord() { return word_; }
@@ -42,7 +40,8 @@ class TrieNode : public Node {
 		static uint64_t node_count_;
 
 		//	The output words up to this point
-		static WordList word_list_;
+		//inline static std::unique_ptr<WordList> word_list_ = std::make_unique<WordList>();
+		//static std::unique_ptr<WordList> word_list_;
 
 	private:
 		//	The children nodes
