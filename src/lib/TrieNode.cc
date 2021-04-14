@@ -106,7 +106,7 @@ std::unique_ptr<WordList> TrieNode::GetList(const std::string &word) {
 
 	//	Output the result
 	if (list_made)
-		return std::move(word_list);
+		return (word_list);
 	else return nullptr;
 }
 

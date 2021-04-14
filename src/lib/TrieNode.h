@@ -7,7 +7,7 @@
 #include <memory>
 #include <iostream>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include "Node.h"
 #include "TermNode.h"
 
@@ -45,7 +45,7 @@ class TrieNode : public Node {
 
 	private:
 		//	The children nodes
-		std::map<char,std::unique_ptr<Node>> child_;
+		std::unordered_map<char,std::unique_ptr<Node>> child_;
 
 		//	The string up to this point
 		std::string word_;
