@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
 			ss << line;
 			std::getline(ss,word);
 			//std::cout << "Adding word: " << word << std::endl;
-			trie.AddWord(word);
+			trie.insert(word);
 			word_count++;
 			word_list.push_back(word);
 			ss.clear();
@@ -92,7 +92,7 @@ int main(int argc, char** argv) {
 			std::string word;
 			ss << line;
 			std::getline(ss,word);
-			trie.TryWord(word);
+			trie.find(word);
 			ss.clear();
 		}
 		my_file.close();

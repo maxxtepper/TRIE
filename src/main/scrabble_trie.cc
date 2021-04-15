@@ -38,7 +38,7 @@ int main(int argc, char** argv) {
 			std::string word;
 			ss << line;
 			std::getline(ss,word);
-			trie.AddWord(word);
+			trie.insert(word);
 			word_count++;
 			ss.clear();
 		}
@@ -72,7 +72,7 @@ int main(int argc, char** argv) {
 					std::cout << "Try a word (0 to quit): ";
 					std::cin >> input;
 					if (input != "0") {
-						bool isAWord = trie.TryWord(input);
+						bool isAWord = trie.find(input);
 						if (isAWord)
 							std::cout << input << " IS a word\n";
 						else

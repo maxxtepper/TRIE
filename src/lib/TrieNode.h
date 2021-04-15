@@ -17,19 +17,14 @@ class TrieNode : public Node {
 		TrieNode(const char n, const std::string word);
 		~TrieNode() = default;
 
-		//	Add word to trie
-		bool AddWord(const std::string &word);
-		virtual bool TryAddLetters(const std::string &word, uint16_t letter);
-		virtual bool AddLetters(const std::string &word, uint16_t letter);
+		//	Insert word into trie
+		bool insert(const std::string &word);
 
-		//	Try the trie
-		bool TryWord(const std::string &word);
-		virtual bool TryLetters(const std::string &word, uint16_t letter);
+		//	Find word in the trie
+		bool find(const std::string &word);
 
 		//	Give a prefix, get a list
 		std::unique_ptr<WordList> GetList(const std::string &word);
-		virtual bool TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
-		virtual bool GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
 
 		//	Object Essentials
 		std::string GetWord() { return word_; }
@@ -42,6 +37,13 @@ class TrieNode : public Node {
 		//	The output words up to this point
 		//inline static std::unique_ptr<WordList> word_list_ = std::make_unique<WordList>();
 		//static std::unique_ptr<WordList> word_list_;
+		
+		//	Shared internal methods
+		virtual bool TryAddLetters(const std::string &word, uint16_t letter);
+		virtual bool AddLetters(const std::string &word, uint16_t letter);
+		virtual bool TryLetters(const std::string &word, uint16_t letter);
+		virtual bool TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
+		virtual bool GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
 
 	private:
 		//	The children nodes
@@ -49,6 +51,7 @@ class TrieNode : public Node {
 
 		//	The string up to this point
 		std::string word_;
+
 };
 
 #endif

@@ -3,7 +3,7 @@
 TrieNode::TrieNode(const char n, const std::string word) : Node(n), word_(word) {
 }
 
-bool TrieNode::AddWord(const std::string &word) {
+bool TrieNode::insert(const std::string &word) {
 	//	Main method for TRIE building
 	//	Loop through each char in the word
 	if (word.size() < 1) return false;
@@ -67,7 +67,7 @@ bool TrieNode::AddLetters(const std::string &word, uint16_t letter) {
 	return (child_[word[temp_letter]]->AddLetters(word,++letter));
 }
 
-bool TrieNode::TryWord(const std::string &word) {
+bool TrieNode::find(const std::string &word) {
 	//	Main method for word searching
 	if (word.size() < 1) return false;
 
