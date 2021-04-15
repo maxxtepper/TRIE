@@ -2,7 +2,7 @@
 #define TRIE_SRC_LIB_TERMNODE_H_
 
 #include <memory>
-#include <unordered_map>
+#include <map>
 #include "Node.h"
 
 class TermNode : public Node {
