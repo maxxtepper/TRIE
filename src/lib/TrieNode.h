@@ -38,13 +38,6 @@ class TrieNode : public Node {
 		//inline static std::unique_ptr<WordList> word_list_ = std::make_unique<WordList>();
 		//static std::unique_ptr<WordList> word_list_;
 		
-		//	Shared internal methods
-		virtual bool TryAddLetters(const std::string &word, uint16_t letter);
-		virtual bool AddLetters(const std::string &word, uint16_t letter);
-		virtual bool TryLetters(const std::string &word, uint16_t letter);
-		virtual bool TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
-		virtual bool GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
-
 	private:
 		//	The children nodes
 		std::unordered_map<char,std::unique_ptr<Node>> child_;
@@ -52,6 +45,12 @@ class TrieNode : public Node {
 		//	The string up to this point
 		std::string word_;
 
+		//	Shared internal methods
+		virtual bool TryAddLetters(const std::string &word, uint16_t letter);
+		virtual bool AddLetters(const std::string &word, uint16_t letter);
+		virtual bool TryLetters(const std::string &word, uint16_t letter);
+		virtual bool TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
+		virtual bool GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
 };
 
 #endif

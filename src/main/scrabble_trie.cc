@@ -89,10 +89,12 @@ int main(int argc, char** argv) {
 					std::cin >> input;
 					if (input != "0") {
 						std::unique_ptr<WordList> word_list = trie.GetList(input);
-						if (word_list != nullptr)
+						if (word_list != nullptr) {
 							std::for_each(word_list->begin(), word_list->end(), [](std::string i) {
 								std::cout << i << std::endl;
 							});
+							std::cout << "List size = " << word_list->size() << std::endl;
+						}
 						else
 							std::cout << "Empty List!\n";
 					}

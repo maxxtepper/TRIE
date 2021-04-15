@@ -27,6 +27,7 @@ class Node {
 
 	private:
 		const char val_;
+
 };
 
 #endif

@@ -130,18 +130,14 @@ bool TrieNode::TryPrefix(const std::string &word, uint16_t letter, std::unique_p
 }
 
 bool TrieNode::GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
-	//	Get the iter
-	auto itr = child_.begin();
-
-	//	This is going to check every node for a TrieTerm
-	if (itr->first == '*') {
+	//	This is going to check for a TrieTerm
+	if (!child_.count('*')) {
 		//	The term is here -> add the word to the list
 		word_list->push_back(this->GetWord());
-		itr++;
 	}
 
 	//	Traverse every child
-	for (; itr != child_.end(); itr++) {
+	for (auto itr = child_.begin(); itr != child_.end(); itr++) {
 		itr->second->GetWords(word, ++letter, word_list);
 	}
 

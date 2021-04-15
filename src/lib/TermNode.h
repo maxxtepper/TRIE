@@ -11,6 +11,8 @@ class TermNode : public Node {
 		~TermNode() = default;
 
 	protected:
+
+	private:
 		//	Add word to trie
 		virtual bool TryAddLetters(const std::string &word, uint16_t letter);
 		virtual bool AddLetters(const std::string &word, uint16_t letter);
@@ -21,9 +23,6 @@ class TermNode : public Node {
 		//	Give a prefix, get a list
 		virtual bool TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
 		virtual bool GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
-
-	private:
-
 };
 
 #endif
