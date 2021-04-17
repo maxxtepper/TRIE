@@ -22,9 +22,13 @@ class TrieNode : public Node {
 
 		//	Find word in the trie
 		bool find(const std::string &word);
+		//	Find sparse word in trie
+		std::unique_ptr<WordList> SparseWord(const std::string &word);
 
 		//	Give a prefix, get a list
-		std::unique_ptr<WordList> GetList(const std::string &word);
+		std::unique_ptr<WordList> PrefixList(const std::string &word);
+		//	Find sparse prefix in trie
+		std::unique_ptr<WordList> SparsePrefix(const std::string &word);
 
 		//	Object Essentials
 		std::string GetWord() { return word_; }
@@ -51,6 +55,7 @@ class TrieNode : public Node {
 		virtual bool TryLetters(const std::string &word, uint16_t letter);
 		virtual bool TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
 		virtual bool GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
+		virtual void TrySparseWord(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
 };
 
 #endif

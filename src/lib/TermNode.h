@@ -23,6 +23,7 @@ class TermNode : public Node {
 		//	Give a prefix, get a list
 		virtual bool TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
 		virtual bool GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
+		virtual void TrySparseWord(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
 };
 
 #endif

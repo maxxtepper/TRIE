@@ -24,6 +24,7 @@ class Node {
 		//	Give a prefix, get a list
 		virtual bool TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) = 0;
 		virtual bool GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) = 0;
+		virtual void TrySparseWord(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) = 0;
 
 	private:
 		const char val_;

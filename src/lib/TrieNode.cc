@@ -12,6 +12,58 @@ bool TrieNode::insert(const std::string &word) {
 	return (this->TryAddLetters(word, letter));
 }
 
+bool TrieNode::find(const std::string &word) {
+	//	Main method for word searching
+	if (word.size() < 1) return false;
+
+	uint16_t letter = 0;
+	return (this->TryLetters(word, letter));
+}
+
+std::unique_ptr<WordList> TrieNode::SparseWord(const std::string &word) {
+	//	Main method for sparse word searching
+	if (word.size() < 1) return nullptr;
+
+	std::unique_ptr<WordList> word_list = std::make_unique<WordList>();
+
+	//	Run the search
+	uint16_t letter = 0;
+	TrySparseWord(word, letter, word_list);
+
+	//	Output the result
+	if (word_list->size() != 0)
+		return (word_list);
+	else return nullptr;
+}
+
+std::unique_ptr<WordList> TrieNode::PrefixList(const std::string &word) {
+	//	Traverse every word up to the input substring
+	if (word.size() < 1) return nullptr;
+
+	std::unique_ptr<WordList> word_list = std::make_unique<WordList>();
+
+	//	Run the search
+	uint16_t letter = 0;
+	bool list_made = TryPrefix(word, letter, word_list);
+
+	//	Output the result
+	if (list_made)
+		return (word_list);
+	else return nullptr;
+}
+void TrieNode::PrintChildren() {
+	for (auto itr = child_.begin(); itr != child_.end(); ++itr)
+		std::cout << itr->first << std::endl;
+}
+
+std::unique_ptr<WordList> TrieNode::SparsePrefix(const std::string &word) {
+	return nullptr;
+}
+
+uint64_t TrieNode::node_count_ = 0;
+
+//	Private methods
+
 bool TrieNode::TryAddLetters(const std::string &word, uint16_t letter) {
 	//	End of word reached
 	if (letter == word.size()) { 
@@ -67,14 +119,6 @@ bool TrieNode::AddLetters(const std::string &word, uint16_t letter) {
 	return (child_[word[temp_letter]]->AddLetters(word,++letter));
 }
 
-bool TrieNode::find(const std::string &word) {
-	//	Main method for word searching
-	if (word.size() < 1) return false;
-
-	uint16_t letter = 0;
-	return (this->TryLetters(word, letter));
-}
-
 bool TrieNode::TryLetters(const std::string &word, uint16_t letter) {
 	//	End of word reached
 	if (letter == word.size()) { 
@@ -94,22 +138,6 @@ bool TrieNode::TryLetters(const std::string &word, uint16_t letter) {
 	}
 }
 
-std::unique_ptr<WordList> TrieNode::GetList(const std::string &word) {
-	//	Traverse every word up to the input substring
-	if (word.size() < 1) return nullptr;
-
-	std::unique_ptr<WordList> word_list = std::make_unique<WordList>();
-
-	//	Run the search
-	uint16_t letter = 0;
-	bool list_made = TryPrefix(word, letter, word_list);
-
-	//	Output the result
-	if (list_made)
-		return (word_list);
-	else return nullptr;
-}
-
 bool TrieNode::TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
 	//	Traverse trie until substring found
 	if (letter == word.size()-1) {
@@ -124,14 +152,13 @@ bool TrieNode::TryPrefix(const std::string &word, uint16_t letter, std::unique_p
 		return false;
 	} else {
 		//	Test the next letter
-		uint16_t temp_letter = letter;
-		return (child_[word[temp_letter]]->TryPrefix(word, ++letter, word_list));
+		return (child_[word[letter]]->TryPrefix(word, letter+1, word_list));
 	}
 }
 
 bool TrieNode::GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
 	//	This is going to check for a TrieTerm
-	if (!child_.count('*')) {
+	if (child_.count('*')) {
 		//	The term is here -> add the word to the list
 		word_list->push_back(this->GetWord());
 	}
@@ -144,9 +171,32 @@ bool TrieNode::GetWords(const std::string &word, uint16_t letter, std::unique_pt
 	return true;
 }
 
-void TrieNode::PrintChildren() {
-	for (auto itr = child_.begin(); itr != child_.end(); ++itr)
-		std::cout << itr->first << std::endl;
+void TrieNode::TrySparseWord(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
+	//	End of word reached
+	if (letter == word.size()) { 
+		if (child_.count('*')) {
+			word_list->push_back(this->GetWord());
+		}
+		return;
+	}
+
+	//	Check for a space
+	if (word[letter] == ' ') {
+		//	space was found -> Traverse all children
+		for (auto itr = child_.begin(); itr != child_.end(); itr++) {
+			itr->second->TrySparseWord(word, letter+1, word_list);
+		}
+	} else {
+		//	no space -> Try the letter of the node's child
+		if (child_.count(word[letter])) {
+				//	The letter is in the tree, traverse
+				child_[word[letter]]->TrySparseWord(word, letter+1, word_list);
+		} else {
+			//	The letter is not in the tree
+			return;
+		}
+	}
+
+	return;
 }
 
-uint64_t TrieNode::node_count_ = 0;
