@@ -11,7 +11,7 @@
 #include "Node.h"
 #include "TermNode.h"
 
-class TrieNode : public Node {
+class Trie {
 	public:
 
 		TrieNode(const char n, const std::string word);
@@ -43,6 +43,8 @@ class TrieNode : public Node {
 		//static std::unique_ptr<WordList> word_list_;
 		
 	private:
+		//	The root node of this trie
+		std::unique_ptr<TrieNode> root_;
 		//	The children nodes
 		std::map<char,std::unique_ptr<Node>> child_;
 
@@ -50,13 +52,13 @@ class TrieNode : public Node {
 		std::string word_;
 
 		//	Shared internal methods
-		virtual bool TryAddLetters(const std::string &word, uint16_t letter);
-		virtual bool AddLetters(const std::string &word, uint16_t letter);
-		virtual bool TryLetters(const std::string &word, uint16_t letter);
-		virtual bool TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
-		virtual bool GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
-		virtual void TrySparseWord(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
-		virtual void TrySparsePrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
+		bool TryAddLetters(const std::string &word, uint16_t letter);
+		bool AddLetters(const std::string &word, uint16_t letter);
+		bool TryLetters(const std::string &word, uint16_t letter);
+		bool TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
+		bool GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
+		void TrySparseWord(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
+		void TrySparsePrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
 };
 
 #endif
