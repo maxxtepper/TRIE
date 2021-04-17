@@ -9,6 +9,7 @@ TEST(TrieNodeShould, BuildTheTrie){
 	char actual0 = trienode->GetChar();
 	EXPECT_EQ(expected0, actual0);
 
+	/*
 	//	Check that try letter finds nothing
 	int letter = 0;
 	std::string word = "";
@@ -21,13 +22,14 @@ TEST(TrieNodeShould, BuildTheTrie){
 	bool actual2 = trienode->AddLetters(word, letter);
 	EXPECT_EQ(expected2, actual2);
 	//	The trie should now have '*' as a child
-
+*/
 	//	Try to add an empty word -> it should not
-	word = "";
+	std::string word = "";
 	bool expected3 = false;
-	bool actual3 = trienode->AddWord(word);
+	bool actual3 = trienode->insert(word);
 	EXPECT_EQ(expected3, actual3);
 
+	/*
 	//	Try to add a letter to the root
 	word = "g";
 	bool expected4 = true;
@@ -42,53 +44,56 @@ TEST(TrieNodeShould, BuildTheTrie){
 
 	//	Try to get that word
 	bool expected6 = true; 
-	bool actual6 = trienode->TryWord(word);
+	bool actual6 = trienode->find(word);
 	EXPECT_EQ(expected6, actual6);
+	*/
 
 	//	Try to get the wrong word
 	word = "farce";
 	bool expected7 = false; 
-	bool actual7 = trienode->TryWord(word);
+	bool actual7 = trienode->find(word);
 	EXPECT_EQ(expected7, actual7);
 
+	/*
 	//	TryAddLetters on a word
 	word = "farce";
 	bool expected8 = true; 
 	bool actual8 = trienode->TryAddLetters(word,letter);
 	EXPECT_EQ(expected8, actual8);
+	*/
 
-	//	AddWord
+	//	insert
 	word = "fantastic";
 	bool expected9 = true; 
-	bool actual9 = trienode->AddWord(word);
+	bool actual9 = trienode->insert(word);
 	EXPECT_EQ(expected9, actual9);
 
-	//	TryWord
+	//	find
 	word = "fantastic";
 	bool expected10 = true; 
-	bool actual10 = trienode->TryWord(word);
+	bool actual10 = trienode->find(word);
 	EXPECT_EQ(expected10, actual10);
 
-	//	TryWord wrong word
+	//	find wrong word
 	word = "hello";
 	bool expected11 = false; 
-	bool actual11 = trienode->TryWord(word);
+	bool actual11 = trienode->find(word);
 	EXPECT_EQ(expected11, actual11);
 
 	//	Try partially correct word
 	word = "fant";
 	bool expected12 = false; 
-	bool actual12 = trienode->TryWord(word);
+	bool actual12 = trienode->find(word);
 	EXPECT_EQ(expected12, actual12);
 
 	//	Add prefix of word
 	word = "fant";
 	bool expected13 = true; 
-	bool actual13 = trienode->AddWord(word);
+	bool actual13 = trienode->insert(word);
 	EXPECT_EQ(expected13, actual13);
 
 	//	Get count
-	uint64_t expected14 = 17; 
+	uint64_t expected14 = 9; 
 	uint64_t actual14 = trienode->Count();
 	EXPECT_EQ(expected14, actual14);
 }
@@ -111,14 +116,14 @@ TEST(TrieShould, GetWords){
 	words.push_back("hi");
 	words.push_back("bye");
 	for (auto itr = words.begin(); itr != words.end(); ++itr) {
-		trienode->AddWord(*itr);
+		trienode->insert(*itr);
 	//	std::cout << "Added " << *itr << std::endl;
 	}
 
 	//	Test with all the words 
 	bool actual1 = true;
 	for (auto itr = words.begin(); itr != words.end(); ++itr) {
-		if (trienode->TryWord(*itr)) {
+		if (trienode->find(*itr)) {
 //			std::cout << *itr << ": true\n";
 		} else {
 //			std::cout << *itr << ": false\n";
@@ -136,7 +141,7 @@ TEST(TrieShould, GetWords){
 	wrong_words.push_back("helmhelm");
 	bool actual2 = false;
 	for (auto itr = wrong_words.begin(); itr != wrong_words.end(); ++itr) {
-		if (trienode->TryWord(*itr)) {
+		if (trienode->find(*itr)) {
 //			std::cout << *itr << ": true\n";
 			actual2 = true;
 		} else {
@@ -157,7 +162,7 @@ TEST(TrieShould, GetWords){
 	word_list_expected3->push_back("helmet");
 	word_list_expected3->push_back("help");
 
-	std::unique_ptr<WordList> word_list_actual3 = trienode->GetList(prefix3);
+	std::unique_ptr<WordList> word_list_actual3 = trienode->PrefixList(prefix3);
 	bool expected3 = true;
 	bool actual3 = std::equal(word_list_expected3->begin(), word_list_expected3->end(), word_list_actual3->begin());
 	EXPECT_EQ(expected3, actual3);
@@ -166,7 +171,7 @@ TEST(TrieShould, GetWords){
 	std::string prefix4 = "ch";
 	std::unique_ptr<WordList> word_list_expected4 = std::make_unique<WordList>();
 
-	std::unique_ptr<WordList> word_list_actual4 = trienode->GetList(prefix4);
+	std::unique_ptr<WordList> word_list_actual4 = trienode->PrefixList(prefix4);
 	bool expected4 = true;
 	bool actual4;
 	if (word_list_actual4 == nullptr) actual4 = true;
