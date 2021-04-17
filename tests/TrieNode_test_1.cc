@@ -29,9 +29,11 @@ TEST(TrieNodeShould, PlaySparseWord){
 	word_list_expected0->push_back("hello");
 
 	std::unique_ptr<WordList> word_list_actual0 = trienode->SparseWord(sparse_word0);
+	/*
 	for (auto itr = word_list_actual0->begin(); itr != word_list_actual0->end(); ++itr) {
 			std::cout << *itr << std::endl;
 	}
+	*/
 	bool expected0 = true;
 	bool actual0 = std::equal(word_list_expected0->begin(), word_list_expected0->end(), word_list_actual0->begin());
 	EXPECT_EQ(expected0, actual0);
@@ -59,10 +61,9 @@ TEST(TrieNodeShould, PlaySparseWord){
 	EXPECT_EQ(expected2, actual2);
 }
 
-/*
-TEST(TrieNodeShould, PlaySparePrefix){
+TEST(TrieNodeShould, PlaySparsePrefix){
 	//	Create trie
-	std::unique_ptr<TrieNode> trienode = std::make_unique<TrieNode>('*',"");
+	std::unique_ptr<TrieNode> trienode = std::make_unique<TrieNode>('#',"");
 	//	Add words to trie
 	std::vector<std::string> words;
 	words.push_back("hello");
@@ -83,12 +84,17 @@ TEST(TrieNodeShould, PlaySparePrefix){
 	//	Get List and check equal
 	std::string sparse_word0 = "h l";
 	std::unique_ptr<WordList> word_list_expected0 = std::make_unique<WordList>();
-	word_list_expected0->push_back("hello");
 	word_list_expected0->push_back("halo");
 	word_list_expected0->push_back("helix");
+	word_list_expected0->push_back("hello");
 	word_list_expected0->push_back("helmet");
 
-	std::unique_ptr<WordList> word_list_actual0 = trienode->SparseWord(sparse_word0);
+	std::unique_ptr<WordList> word_list_actual0 = trienode->SparsePrefix(sparse_word0);
+	/*
+	for (auto itr = word_list_actual0->begin(); itr != word_list_actual0->end(); ++itr) {
+			std::cout << *itr << std::endl;
+	}
+	*/
 	bool expected0 = true;
 	bool actual0 = std::equal(word_list_expected0->begin(), word_list_expected0->end(), word_list_actual0->begin());
 	EXPECT_EQ(expected0, actual0);
@@ -97,7 +103,7 @@ TEST(TrieNodeShould, PlaySparePrefix){
 	std::string sparse_word1 = "h b";
 	std::unique_ptr<WordList> word_list_expected1 = std::make_unique<WordList>();
 
-	std::unique_ptr<WordList> word_list_actual1 = trienode->SparseWord(sparse_word1);
+	std::unique_ptr<WordList> word_list_actual1 = trienode->SparsePrefix(sparse_word1);
 	bool expected1 = true;
 	bool actual1;
 	if (word_list_actual1 == nullptr) actual1 = true;
@@ -107,16 +113,15 @@ TEST(TrieNodeShould, PlaySparePrefix){
 	//	Get List and check equal
 	std::string sparse_word2 = "  l";
 	std::unique_ptr<WordList> word_list_expected2 = std::make_unique<WordList>();
-	word_list_expected2->push_back("hello");
+	word_list_expected2->push_back("fall");
 	word_list_expected2->push_back("halo");
 	word_list_expected2->push_back("helix");
+	word_list_expected2->push_back("hello");
 	word_list_expected2->push_back("helmet");
 	word_list_expected2->push_back("pill");
-	word_list_expected2->push_back("fall");
 
-	std::unique_ptr<WordList> word_list_actual2 = trienode->SparseWord(sparse_word2);
+	std::unique_ptr<WordList> word_list_actual2 = trienode->SparsePrefix(sparse_word2);
 	bool expected2 = true;
 	bool actual2 = std::equal(word_list_expected2->begin(), word_list_expected2->end(), word_list_actual2->begin());
 	EXPECT_EQ(expected2, actual2);
 }
-	*/
