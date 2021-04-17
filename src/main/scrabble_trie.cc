@@ -70,9 +70,11 @@ int main(int argc, char** argv) {
 			case 1:
 			{
 				std::string input = "";
+				//	Recycle the input
+				std::getline(std::cin, input);
 				while (input != "0") {
 					std::cout << "Try a word (0 to quit): ";
-					std::cin >> input;
+					std::getline(std::cin, input);
 					if (input != "0") {
 						bool isAWord = trie.find(input);
 						if (isAWord)
@@ -86,9 +88,11 @@ int main(int argc, char** argv) {
 			case 2:
 			{
 				std::string input = "";
+				//	Recycle the input
+				std::getline(std::cin, input);
 				while (input != "0") {
 					std::cout << "Enter a word (0 to quit): ";
-					std::cin >> input;
+					std::getline(std::cin, input);
 					if (input != "0") {
 						std::unique_ptr<WordList> word_list = trie.PrefixList(input);
 						if (word_list != nullptr) {
@@ -101,6 +105,7 @@ int main(int argc, char** argv) {
 							std::cout << "Empty List!\n";
 					}
 				}
+				break;
 			}
 			case 3:
 			{
@@ -122,6 +127,7 @@ int main(int argc, char** argv) {
 							std::cout << "Empty List!\n";
 					}
 				}
+				break;
 			}
 			case 4:
 			{
@@ -143,6 +149,7 @@ int main(int argc, char** argv) {
 							std::cout << "Empty List!\n";
 					}
 				}
+				break;
 			}
 			default: break;
 		}
