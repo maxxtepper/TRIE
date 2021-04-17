@@ -57,7 +57,19 @@ void TrieNode::PrintChildren() {
 }
 
 std::unique_ptr<WordList> TrieNode::SparsePrefix(const std::string &word) {
-	return nullptr;
+	//	Traverse every word up to the input substring
+	if (word.size() < 1) return nullptr;
+
+	std::unique_ptr<WordList> word_list = std::make_unique<WordList>();
+
+	//	Run the search
+	uint16_t letter = 0;
+	TrySparsePrefix(word, letter, word_list);
+
+	//	Output the result
+	if (word_list->size() != 0)
+		return (word_list);
+	else return nullptr;
 }
 
 uint64_t TrieNode::node_count_ = 0;
@@ -200,3 +212,42 @@ void TrieNode::TrySparseWord(const std::string &word, uint16_t letter, std::uniq
 	return;
 }
 
+void TrieNode::TrySparsePrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
+	//	Traverse trie until substring found
+	if (letter == word.size()-1) {
+		//	Check for a space
+		if (word[letter] == ' ') {
+			//	space was found -> Traverse all children
+			for (auto itr = child_.begin(); itr != child_.end(); itr++) {
+				itr->second->GetWords(word, letter+1, word_list);
+			}
+		} else {
+			if (child_.count(word[letter])) {
+				//	The letter is in the tree, traverse
+				child_[word[letter]]->GetWords(word, letter, word_list);
+			} else {
+				//	The letter is not in the tree
+				return;
+			}
+		}
+	}
+
+	//	Traverse trie until substring not found
+	//	Check for a space
+	if (word[letter] == ' ') {
+		//	space was found -> Traverse all children
+		for (auto itr = child_.begin(); itr != child_.end(); itr++) {
+			itr->second->TrySparsePrefix(word, letter+1, word_list);
+		}
+	} else {
+		if (!child_.count(word[letter])) {
+			//	This substring is not in the trie
+			return;
+		} else {
+			//	Test the next letter
+			child_[word[letter]]->TrySparsePrefix(word, letter+1, word_list);
+		}
+	}
+
+	return;
+}

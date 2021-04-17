@@ -23,3 +23,7 @@ bool TermNode::GetWords(const std::string &word, uint16_t letter, std::unique_pt
 void TermNode::TrySparseWord(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
 	return;
 }
+
+void TermNode::TrySparsePrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
+	return;
+}

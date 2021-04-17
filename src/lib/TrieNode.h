@@ -56,6 +56,7 @@ class TrieNode : public Node {
 		virtual bool TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
 		virtual bool GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
 		virtual void TrySparseWord(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
+		virtual void TrySparsePrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
 };
 
 #endif
