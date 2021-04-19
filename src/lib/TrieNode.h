@@ -7,7 +7,7 @@
 #include <memory>
 #include <iostream>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <queue>
 
 typedef std::vector<std::string> WordList;
@@ -18,7 +18,7 @@ class TrieNode {
 		~TrieNode();
 
 		//	The children nodes
-		std::map<char, std::shared_ptr<TrieNode>> children;
+		std::unordered_map<char, std::shared_ptr<TrieNode>> children;
 
 		//	Object Essentials
 		char GetLetter() { return letter_; }

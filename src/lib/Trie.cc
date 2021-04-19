@@ -78,27 +78,28 @@ std::unique_ptr<WordList> Trie::SparseWord(const std::string &word) {
 	while (letter != word.size()) {
 		//	The Depth-Level Queue to load onto for the next iteration
 		std::queue<std::shared_ptr<TrieNode>> next_level;
-		//	Unload the node
-		current = current_level.front();
-		//	Perform on its children
-		//
-		//	Check for a space
-		if (word[letter] == ' ') {
-			//	space was found -> Traverse all children
-			for (auto itr = current->children.begin(); itr != current->children.end(); itr++) {
-				//	Add it to the queue
-				next_level.push(itr->second);
+		while (!current_level.empty()) {
+			//	Unload the node
+			current = current_level.front();
+			//	Check for a space
+			if (word[letter] == ' ') {
+				//	space was found -> Traverse all children
+				for (auto itr = current->children.begin(); itr != current->children.end(); itr++) {
+					if (itr->first != endSymbol_) {
+						//	Push this child onto the queue
+						next_level.push(itr->second);
+					}
+				}
+			} else {
+				//	no space -> Try the letter of the node's child
+				if (current->children.count(word[letter])) {
+						//	The letter is in current -> load
+						next_level.push(current->children[word[letter]]);
+				}
 			}
-		} else {
-			//	no space -> Try the letter of the node's child
-			if (current->children.count(word[letter])) {
-					//	The letter is in current -> load
-					next_level.push(current->children[word[letter]]);
-			}
+			//	Remove the node
+			current_level.pop();
 		}
-		//	Remove the node
-		current_level.pop();
-
 		//	Prepare for the next iteration
 		current_level.swap(next_level);
 		letter++;
@@ -116,6 +117,9 @@ std::unique_ptr<WordList> Trie::SparseWord(const std::string &word) {
 		//	Remove the node
 		current_level.pop();
 	}
+
+	//	Sort the output
+	std::sort(word_list->begin(), word_list->end());
 
 	//	Output the result
 	if (word_list->size() != 0)
@@ -159,29 +163,34 @@ std::unique_ptr<WordList> Trie::PrefixList(const std::string &word) {
 	if (letter == word.size() && !current_level.empty()) {
 		//	Traverse and add all nodes
 		while (!current_level.empty()) {
-		//	The Depth-Level Queue to load onto for the next iteration
+			//	The Depth-Level Queue to load onto for the next iteration
 			std::queue<std::shared_ptr<TrieNode>> next_level;
-			//	Unload the node
-			current = current_level.front();
-			//	Perform on its children
-			//
-			//	Traverse every child
-			for (auto itr = current->children.begin(); itr != current->children.end(); itr++) {
-				if (itr->first == endSymbol_) {
-					//	A word was reached -> push it
-					word_list->push_back(current->GetWord());
-				} else {
-					//	Push this child onto the queue
-					next_level.push(itr->second);
+			while (!current_level.empty()) {
+				//	Unload the node
+				current = current_level.front();
+				//	Perform on its children
+				//
+				//	Traverse every child
+				for (auto itr = current->children.begin(); itr != current->children.end(); itr++) {
+					if (itr->first == endSymbol_) {
+						//	A word was reached -> push it
+						word_list->push_back(current->GetWord());
+					} else {
+						//	Push this child onto the queue
+						next_level.push(itr->second);
+					}
 				}
-			}
 
-			//	Remove the node
-			current_level.pop();
+				//	Remove the node
+				current_level.pop();
+			}
 			//	Prepare for the next iteration
 			current_level.swap(next_level);
 		}
 	}
+
+	//	Sort the output
+	std::sort(word_list->begin(), word_list->end());
 
 	//	Output the result
 	if (word_list->size() != 0)
@@ -213,27 +222,28 @@ std::unique_ptr<WordList> Trie::SparsePrefix(const std::string &word) {
 	while (letter != word.size() && !current_level.empty()) {
 		//	The Depth-Level Queue to load onto for the next iteration
 		std::queue<std::shared_ptr<TrieNode>> next_level;
-		//	Unload the node
-		current = current_level.front();
-		//	Perform on its children
-		//
-		//	Check for a space
-		if (word[letter] == ' ') {
-			//	space was found -> Traverse all children
-			for (auto itr = current->children.begin(); itr != current->children.end(); itr++) {
-				//	Add it to the queue
-				next_level.push(itr->second);
+		while (!current_level.empty()) {
+			//	Unload the node
+			current = current_level.front();
+			//	Check for a space
+			if (word[letter] == ' ') {
+				//	space was found -> Traverse all children
+				for (auto itr = current->children.begin(); itr != current->children.end(); itr++) {
+					if (itr->first != endSymbol_) {
+						//	Push this child onto the queue
+						next_level.push(itr->second);
+					}
+				}
+			} else {
+				//	no space -> Try the letter of the node's child
+				if (current->children.count(word[letter])) {
+						//	The letter is in current -> load
+						next_level.push(current->children[word[letter]]);
+				}
 			}
-		} else {
-			//	no space -> Try the letter of the node's child
-			if (current->children.count(word[letter])) {
-					//	The letter is in current -> load
-					next_level.push(current->children[word[letter]]);
-			}
+			//	Remove the node
+			current_level.pop();
 		}
-		//	Remove the node
-		current_level.pop();
-
 		//	Prepare for the next iteration
 		current_level.swap(next_level);
 		letter++;
@@ -245,27 +255,33 @@ std::unique_ptr<WordList> Trie::SparsePrefix(const std::string &word) {
 		while (!current_level.empty()) {
 		//	The Depth-Level Queue to load onto for the next iteration
 			std::queue<std::shared_ptr<TrieNode>> next_level;
-			//	Unload the node
-			current = current_level.front();
-			//	Perform on its children
-			//
-			//	Traverse every child
-			for (auto itr = current->children.begin(); itr != current->children.end(); itr++) {
-				if (itr->first == endSymbol_) {
-					//	A word was reached -> push it
-					word_list->push_back(current->GetWord());
-				} else {
-					//	Push this child onto the queue
-					next_level.push(itr->second);
+			//	Traverse and add all nodes
+			while (!current_level.empty()) {
+				//	Unload the node
+				current = current_level.front();
+				//	Perform on its children
+				//
+				//	Traverse every child
+				for (auto itr = current->children.begin(); itr != current->children.end(); itr++) {
+					if (itr->first == endSymbol_) {
+						//	A word was reached -> push it
+						word_list->push_back(current->GetWord());
+					} else {
+						//	Push this child onto the queue
+						next_level.push(itr->second);
+					}
 				}
-			}
 
-			//	Remove the node
-			current_level.pop();
+				//	Remove the node
+				current_level.pop();
+			}
 			//	Prepare for the next iteration
 			current_level.swap(next_level);
 		}
 	}
+
+	//	Sort the output
+	std::sort(word_list->begin(), word_list->end());
 
 	//	Output the result
 	if (word_list->size() != 0)
