@@ -1,207 +1,92 @@
 #include <memory>
 #include "gtest/gtest.h"
-#include "src/lib/TrieNode.h"
+#include "src/lib/Trie.h"
 
-TEST(TrieNodeShould, BuildTheTrie){
-	//	Create trie with no children
-	char expected0 = '#';
-	std::unique_ptr<TrieNode> trienode = std::make_unique<TrieNode>(expected0,"");
-	char actual0 = trienode->GetChar();
+
+TEST(TrieShould, InsertFind){
+	//	Global to all tests
+	std::shared_ptr<Trie> trie = std::make_shared<Trie>();
+
+	//	Test0
+	//	Try to find a word
+	std::string word0 = "";
+	bool actual0 = false;
+	bool expected0 = trie->find(word0);
 	EXPECT_EQ(expected0, actual0);
 
-	/*
-	//	Check that try letter finds nothing
-	int letter = 0;
-	std::string word = "";
-	bool expected1 = false;
-	bool actual1 = trienode->TryLetters(word, letter);
-	EXPECT_EQ(expected1, actual1);
-
-	//	Add no letters
-	bool expected2 = true;
-	bool actual2 = trienode->AddLetters(word, letter);
-	EXPECT_EQ(expected2, actual2);
-	//	The trie should now have '*' as a child
-*/
-	//	Try to add an empty word -> it should not
-	std::string word = "";
-	bool expected3 = false;
-	bool actual3 = trienode->insert(word);
-	EXPECT_EQ(expected3, actual3);
-
-	/*
-	//	Try to add a letter to the root
-	word = "g";
-	bool expected4 = true;
-	bool actual4 = trienode->AddLetters(word,letter);
-	EXPECT_EQ(expected4, actual4);
-
-	//	Try to add letters
-	word = "word";
-	bool expected5 = true;
-	bool actual5 = trienode->AddLetters(word,letter);
-	EXPECT_EQ(expected5, actual5);
-
-	//	Try to get that word
-	bool expected6 = true; 
-	bool actual6 = trienode->find(word);
-	EXPECT_EQ(expected6, actual6);
-	*/
-
-	//	Try to get the wrong word
-	word = "farce";
-	bool expected7 = false; 
-	bool actual7 = trienode->find(word);
-	EXPECT_EQ(expected7, actual7);
-
-	/*
-	//	TryAddLetters on a word
-	word = "farce";
-	bool expected8 = true; 
-	bool actual8 = trienode->TryAddLetters(word,letter);
-	EXPECT_EQ(expected8, actual8);
-	*/
-
-	//	insert
-	word = "fantastic";
-	bool expected9 = true; 
-	bool actual9 = trienode->insert(word);
-	EXPECT_EQ(expected9, actual9);
-
-	//	find
-	word = "fantastic";
-	bool expected10 = true; 
-	bool actual10 = trienode->find(word);
-	EXPECT_EQ(expected10, actual10);
-
-	//	find wrong word
-	word = "hello";
-	bool expected11 = false; 
-	bool actual11 = trienode->find(word);
-	EXPECT_EQ(expected11, actual11);
-
-	//	Try partially correct word
-	word = "fant";
-	bool expected12 = false; 
-	bool actual12 = trienode->find(word);
-	EXPECT_EQ(expected12, actual12);
-
-	//	Add prefix of word
-	word = "fant";
-	bool expected13 = true; 
-	bool actual13 = trienode->insert(word);
-	EXPECT_EQ(expected13, actual13);
-
-	//	Get count
-	uint64_t expected14 = 9; 
-	uint64_t actual14 = trienode->Count();
-	EXPECT_EQ(expected14, actual14);
-}
-
-TEST(TrieShould, GetWords){
-	//	Create trie with no children
-	char expected0 = '#';
-	std::unique_ptr<TrieNode> trienode = std::make_unique<TrieNode>(expected0,"");
-	char actual0 = trienode->GetChar();
-	EXPECT_EQ(expected0, actual0);
-	
-	//	Add words to trie
-	std::vector<std::string> words;
-	words.push_back("hello");
-	words.push_back("hell");
-	words.push_back("helix");
-	words.push_back("help");
-	words.push_back("helm");
-	words.push_back("helmet");
-	words.push_back("hi");
-	words.push_back("bye");
-	for (auto itr = words.begin(); itr != words.end(); ++itr) {
-		trienode->insert(*itr);
-	//	std::cout << "Added " << *itr << std::endl;
-	}
-
-	//	Test with all the words 
+	//	Test1
+	//	Add a word
+	std::string word1 = "test";
 	bool actual1 = true;
-	for (auto itr = words.begin(); itr != words.end(); ++itr) {
-		if (trienode->find(*itr)) {
-//			std::cout << *itr << ": true\n";
-		} else {
-//			std::cout << *itr << ": false\n";
-			actual1 = false;
-		}
-
-	}
-	bool expected1 = true;
+	bool expected1 = trie->insert(word1);
 	EXPECT_EQ(expected1, actual1);
 
-	//	Test with all the wrong words 
-	std::vector<std::string> wrong_words;
-	wrong_words.push_back("angst");
-	wrong_words.push_back("helper");
-	wrong_words.push_back("helmhelm");
-	bool actual2 = false;
-	for (auto itr = wrong_words.begin(); itr != wrong_words.end(); ++itr) {
-		if (trienode->find(*itr)) {
-//			std::cout << *itr << ": true\n";
-			actual2 = true;
-		} else {
-//			std::cout << *itr << ": false\n";
-		}
-
-	}
-	bool expected2 = false;
+	//	Test2
+	//	Find the word
+	std::string word2 = word1;
+	bool actual2 = true;
+	bool expected2 = trie->find(word2);
 	EXPECT_EQ(expected2, actual2);
 
-	//	Get List and check equal
-	std::string prefix3 = "hel";
-	std::unique_ptr<WordList> word_list_expected3 = std::make_unique<WordList>();
-	word_list_expected3->push_back("helix");
-	word_list_expected3->push_back("hell");
-	word_list_expected3->push_back("hello");
-	word_list_expected3->push_back("helm");
-	word_list_expected3->push_back("helmet");
-	word_list_expected3->push_back("help");
-
-	std::unique_ptr<WordList> word_list_actual3 = trienode->PrefixList(prefix3);
-	bool expected3 = true;
-	bool actual3 = std::equal(word_list_expected3->begin(), word_list_expected3->end(), word_list_actual3->begin());
+	//	Test3
+	//	Find the wrong word
+	std::string word3 = word0;
+	bool actual3 = false;
+	bool expected3 = trie->find(word3);
 	EXPECT_EQ(expected3, actual3);
-	
-	//	Get List and check empty 
-	std::string prefix4 = "ch";
-	std::unique_ptr<WordList> word_list_expected4 = std::make_unique<WordList>();
-
-	std::unique_ptr<WordList> word_list_actual4 = trienode->PrefixList(prefix4);
-	bool expected4 = true;
-	bool actual4;
-	if (word_list_actual4 == nullptr) actual4 = true;
-	else actual4 = false;
-	EXPECT_EQ(expected4, actual4);
-	
-	/*
-	*/
 }
-#include <memory>
-#include "gtest/gtest.h"
-#include "src/lib/TrieNode.h"
 
-TEST(TrieNodeShould, ReturnSomething){
-/*
-	std::unique_ptr<TrieNode> trienode = std::make_unique<TrieNode>();
-	std::string actual = trienode->DoSomething();
-	std::string expected = Something;
-	EXPECT_EQ(expected, actual);
-*/
-}
-#include <memory>
-#include "gtest/gtest.h"
-#include "src/lib/TrieNode.h"
+TEST(TrieShould, PrefixList){
+	//	Global to all tests
+	std::shared_ptr<Trie> trie = std::make_shared<Trie>();
+	//	Add many words to a word list
+	std::unique_ptr<WordList> word_list = std::make_unique<WordList>();
+	word_list->push_back("taste");
+	word_list->push_back("tight");
+	word_list->push_back("tall");
+	word_list->push_back("small");
+	word_list->push_back("sick");
+	word_list->push_back("sister");
 
-TEST(TrieNodeShould, ReturnSomething){
-/*
-	std::unique_ptr<TrieNode> trienode = std::make_unique<TrieNode>();
-	std::string actual = trienode->DoSomething();
-	std::string expected = Something;
-	EXPECT_EQ(expected, actual);
-*/
+	//	Test0
+	//	Add the words from list
+	for (std::string word : *word_list) {
+		trie->insert(word);
+	}
+	//	Verify they are there
+	bool actual0 = true;
+	for (std::string word : *word_list) {
+		if (!trie->find(word)) {
+			actual0 = false;
+			break;
+		}
+	}
+	bool expected0 = true;
+	EXPECT_EQ(expected0, actual0);
+
+	//	Test1
+	//	Get a list of words from prefix list
+	std::string prefix1 = "t";
+	std::unique_ptr<WordList> expected1 = std::make_unique<WordList>();
+	expected1->push_back("tall");
+	expected1->push_back("taste");
+	expected1->push_back("tight");
+	std::unique_ptr<WordList> actual1 = trie->PrefixList(prefix1);
+	EXPECT_EQ(*expected1, *actual1);
+
+	//	Test2
+	//	Get a list of words from prefix list
+	std::string prefix2 = "si";
+	std::unique_ptr<WordList> expected2 = std::make_unique<WordList>();
+	expected2->push_back("sick");
+	expected2->push_back("sister");
+	std::unique_ptr<WordList> actual2 = trie->PrefixList(prefix2);
+	EXPECT_EQ(*expected2, *actual2);
+
+	//	Test3
+	//	Get a list of words from prefix list
+	std::string prefix3 = "b";
+	std::unique_ptr<WordList> expected3 = nullptr;
+	std::unique_ptr<WordList> actual3 = trie->PrefixList(prefix3);
+	EXPECT_EQ(expected3, actual3);
 }
