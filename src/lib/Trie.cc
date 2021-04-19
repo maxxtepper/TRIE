@@ -1,253 +1,274 @@
-#include "TrieNode.h" 
+#include "Trie.h" 
 
-TrieNode::TrieNode(const char n, const std::string word) : Node(n), word_(word) {
+Trie::Trie() {
+	std::shared_ptr<TrieNode> trie_node = std::make_shared<TrieNode>('#', "");
+	this->root_ = trie_node;
+	this->endSymbol_ = '*';
 }
 
-bool TrieNode::insert(const std::string &word) {
-	//	Main method for TRIE building
-	//	Loop through each char in the word
+bool Trie::insert(const std::string &word) {
+	//	Bad input
 	if (word.size() < 1) return false;
 
-	uint16_t letter = 0;
-	return (this->TryAddLetters(word, letter));
-}
-
-bool TrieNode::find(const std::string &word) {
-	//	Main method for word searching
-	if (word.size() < 1) return false;
-
-	uint16_t letter = 0;
-	return (this->TryLetters(word, letter));
-}
-
-std::unique_ptr<WordList> TrieNode::SparseWord(const std::string &word) {
-	//	Main method for sparse word searching
-	if (word.size() < 1) return nullptr;
-
-	std::unique_ptr<WordList> word_list = std::make_unique<WordList>();
-
-	//	Run the search
-	uint16_t letter = 0;
-	TrySparseWord(word, letter, word_list);
-
-	//	Output the result
-	if (word_list->size() != 0)
-		return (word_list);
-	else return nullptr;
-}
-
-std::unique_ptr<WordList> TrieNode::PrefixList(const std::string &word) {
-	//	Traverse every word up to the input substring
-	if (word.size() < 1) return nullptr;
-
-	std::unique_ptr<WordList> word_list = std::make_unique<WordList>();
-
-	//	Run the search
-	uint16_t letter = 0;
-	bool list_made = TryPrefix(word, letter, word_list);
-
-	//	Output the result
-	if (list_made)
-		return (word_list);
-	else return nullptr;
-}
-void TrieNode::PrintChildren() {
-	for (auto itr = child_.begin(); itr != child_.end(); ++itr)
-		std::cout << itr->first << std::endl;
-}
-
-std::unique_ptr<WordList> TrieNode::SparsePrefix(const std::string &word) {
-	//	Traverse every word up to the input substring
-	if (word.size() < 1) return nullptr;
-
-	std::unique_ptr<WordList> word_list = std::make_unique<WordList>();
-
-	//	Run the search
-	uint16_t letter = 0;
-	TrySparsePrefix(word, letter, word_list);
-
-	//	Output the result
-	if (word_list->size() != 0)
-		return (word_list);
-	else return nullptr;
-}
-
-uint64_t TrieNode::node_count_ = 0;
-
-//	Private methods
-
-bool TrieNode::TryAddLetters(const std::string &word, uint16_t letter) {
-	//	End of word reached
-	if (letter == word.size()) { 
-		//	Case of adding a word that already has all its letters in the trie
-		auto itr = child_.find('*');
-		if (itr == child_.end()) {
-			std::unique_ptr<Node> term_node = std::make_unique<TermNode>('*');
-			auto letter_ptr_pair = std::make_pair('*', std::move(term_node));
-			child_.insert(std::move(letter_ptr_pair));
-			return true;
+	//	Start at the root
+	std::shared_ptr<TrieNode> current = this->root_;
+	//	Generate the subword
+	std::string subword;
+	//	Loop down until the whole word is in the trie
+	for (char letter : word) {
+		//	Add the letter to the subword
+		subword.push_back(letter);
+		//	See if this letter already exists in this node
+		if (current->children.find(letter) == current->children.end()) {
+			//	The letter was not found; add a new node
+			std::shared_ptr<TrieNode> trie_node = std::make_shared<TrieNode>(letter, subword);
+			auto letter_ptr_pair = std::make_pair(letter, trie_node);
+			current->children.insert(std::move(letter_ptr_pair));
+			node_count_++;
 		}
-		//	This means the word could not be added
-		else return false;
+		//	Go to next node
+		current = current->children[letter];
 	}
 
-	//	Try the letter of the node's child
-	auto itr = child_.find(word[letter]);
-	if (itr != child_.end()) {
-			//	The letter is in the tree, traverse
-			int temp_letter = letter;
-			return (child_[word[temp_letter]]->TryAddLetters(word, ++letter));
-	} else {
-		//	The letter is not in the tree
-		return (this->AddLetters(word,letter));
-	}
-}
-
-bool TrieNode::AddLetters(const std::string &word, uint16_t letter) {
-	//	End of word check
-	if (letter == word.size()) { 
-		//	Add the terminating character if the word is not already there
-		if (!child_.count('*')) {
-			std::unique_ptr<Node> term_node = std::make_unique<TermNode>('*');
-			auto letter_ptr_pair = std::make_pair('*', std::move(term_node));
-			child_.insert(std::move(letter_ptr_pair));
-			return true;
-		} else return false;
-	}
-
-	//	Add the letter to child
-	std::string sub_word;
-	for (uint16_t i=0; i<letter+1; i++)
-		sub_word.push_back(word[i]);
-	std::unique_ptr<Node> child_node = std::make_unique<TrieNode>(word[letter], sub_word);
-	auto letter_ptr_pair = std::make_pair(word[letter],std::move(child_node));
-	child_.insert(std::move(letter_ptr_pair));
-
-	//	Count this new node
-	node_count_++;
-
-	//	Add the next letter
-	int temp_letter = letter;
-	return (child_[word[temp_letter]]->AddLetters(word,++letter));
-}
-
-bool TrieNode::TryLetters(const std::string &word, uint16_t letter) {
-	//	End of word reached
-	if (letter == word.size()) { 
-		if (child_.count('*'))
-			return true;
-		else return false;
-	}
-
-	//	Try the letter of the node's child
-	if (child_.count(word[letter])) {
-			//	The letter is in the tree, traverse
-			int temp_letter = letter;
-			return (child_[word[temp_letter]]->TryLetters(word, ++letter));
-	} else {
-		//	The letter is not in the tree
-		return false;
-	}
-}
-
-bool TrieNode::TryPrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
-	//	Traverse trie until substring found
-	if (letter == word.size()-1) {
-		if (child_.count(word[letter])) {
-			return (child_[word[letter]]->GetWords(word, letter, word_list));
-		} else return false;
-	}
-
-	//	Traverse trie until substring not found
-	if (!child_.count(word[letter])) {
-		//	This substring is not in the trie
-		return false;
-	} else {
-		//	Test the next letter
-		return (child_[word[letter]]->TryPrefix(word, letter+1, word_list));
-	}
-}
-
-bool TrieNode::GetWords(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
-	//	This is going to check for a TrieTerm
-	if (child_.count('*')) {
-		//	The term is here -> add the word to the list
-		word_list->push_back(this->GetWord());
-	}
-
-	//	Traverse every child
-	for (auto itr = child_.begin(); itr != child_.end(); itr++) {
-		itr->second->GetWords(word, ++letter, word_list);
-	}
+	//	Insert the termination
+	current->children.insert({this->endSymbol_, nullptr});
 
 	return true;
 }
 
-void TrieNode::TrySparseWord(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
-	//	End of word reached
-	if (letter == word.size()) { 
-		if (child_.count('*')) {
-			word_list->push_back(this->GetWord());
+bool Trie::find(const std::string &word) {
+	//	Bad input
+	if (word.size() < 1) return false;
+
+	//	Start at the root
+	std::shared_ptr<TrieNode> current = this->root_;
+
+	//	Loop down until the whole word is found or something is not found
+	for (char letter : word) {
+		//	See if this letter exists in this node
+		if (current->children.find(letter) == current->children.end()) {
+			//	Not found
+			return false;
 		}
-		return;
+		//	Go to next node
+		current = current->children[letter];
 	}
 
-	//	Check for a space
-	if (word[letter] == ' ') {
-		//	space was found -> Traverse all children
-		for (auto itr = child_.begin(); itr != child_.end(); itr++) {
-			itr->second->TrySparseWord(word, letter+1, word_list);
-		}
-	} else {
-		//	no space -> Try the letter of the node's child
-		if (child_.count(word[letter])) {
-				//	The letter is in the tree, traverse
-				child_[word[letter]]->TrySparseWord(word, letter+1, word_list);
-		} else {
-			//	The letter is not in the tree
-			return;
-		}
-	}
-
-	return;
+	//	At the end of word, check for termination
+	if (current->children.find(endSymbol_) == current->children.end())
+		return false;
+	else
+		return true;
 }
 
-void TrieNode::TrySparsePrefix(const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
-	//	Traverse trie until substring found
-	if (letter == word.size()-1) {
+std::unique_ptr<WordList> Trie::SparseWord(const std::string &word) {
+	//	Main method for sparse word searching
+	if (word.size() < 1) return nullptr;
+
+	//	The word list
+	std::unique_ptr<WordList> word_list = std::make_unique<WordList>();
+
+	//	The Depth-Level Queue to process
+	std::queue<std::shared_ptr<TrieNode>> current_level;
+	current_level.push(this->root_);
+
+	//	Run the search
+	uint16_t letter = 0;
+	std::shared_ptr<TrieNode> current;
+	while (letter != word.size()) {
+		//	The Depth-Level Queue to load onto for the next iteration
+		std::queue<std::shared_ptr<TrieNode>> next_level;
+		//	Unload the node
+		current = current_level.front();
+		//	Perform on its children
+		//
 		//	Check for a space
 		if (word[letter] == ' ') {
 			//	space was found -> Traverse all children
-			for (auto itr = child_.begin(); itr != child_.end(); itr++) {
-				itr->second->GetWords(word, letter+1, word_list);
+			for (auto itr = current->children.begin(); itr != current->children.end(); itr++) {
+				//	Add it to the queue
+				next_level.push(itr->second);
 			}
 		} else {
-			if (child_.count(word[letter])) {
-				//	The letter is in the tree, traverse
-				child_[word[letter]]->GetWords(word, letter, word_list);
-			} else {
-				//	The letter is not in the tree
-				return;
+			//	no space -> Try the letter of the node's child
+			if (current->children.count(word[letter])) {
+					//	The letter is in current -> load
+					next_level.push(current->children[word[letter]]);
 			}
+		}
+		//	Remove the node
+		current_level.pop();
+
+		//	Prepare for the next iteration
+		current_level.swap(next_level);
+		letter++;
+	}
+
+	//	Current level is loaded with nodes to be checked for end
+	while (!current_level.empty()) {
+		//	Unload the node
+		current = current_level.front();
+		//	Check it for term
+		if (current->children.count(endSymbol_)) {
+			//	Add it to the output
+			word_list->push_back(current->GetWord());
+		}
+		//	Remove the node
+		current_level.pop();
+	}
+
+	//	Output the result
+	if (word_list->size() != 0)
+		return (word_list);
+	else return nullptr;
+}
+
+std::unique_ptr<WordList> Trie::PrefixList(const std::string &word) {
+	//	Main method for prefix searching
+	if (word.size() < 1) return nullptr;
+
+	//	The word list
+	std::unique_ptr<WordList> word_list = std::make_unique<WordList>();
+
+	//	The Depth-Level Queue to process
+	std::queue<std::shared_ptr<TrieNode>> current_level;
+	current_level.push(this->root_);
+
+	//	Run the search
+	uint16_t letter = 0;
+	std::shared_ptr<TrieNode> current;
+	while (letter != word.size() && !current_level.empty()) {
+		//	The Depth-Level Queue to load onto for the next iteration
+		std::queue<std::shared_ptr<TrieNode>> next_level;
+		//	Unload the node
+		current = current_level.front();
+		//	Perform on its children
+		//
+		if (current->children.count(word[letter])) {
+				//	The letter is in current -> load
+				next_level.push(current->children[word[letter]]);
+		}
+		//	Remove the node
+		current_level.pop();
+		//	Prepare for the next iteration
+		current_level.swap(next_level);
+		letter++;
+	}
+
+	//	Can we traverse to find words?
+	if (letter == word.size() && !current_level.empty()) {
+		//	Traverse and add all nodes
+		while (!current_level.empty()) {
+		//	The Depth-Level Queue to load onto for the next iteration
+			std::queue<std::shared_ptr<TrieNode>> next_level;
+			//	Unload the node
+			current = current_level.front();
+			//	Perform on its children
+			//
+			//	Traverse every child
+			for (auto itr = current->children.begin(); itr != current->children.end(); itr++) {
+				if (itr->first == endSymbol_) {
+					//	A word was reached -> push it
+					word_list->push_back(current->GetWord());
+				} else {
+					//	Push this child onto the queue
+					next_level.push(itr->second);
+				}
+			}
+
+			//	Remove the node
+			current_level.pop();
+			//	Prepare for the next iteration
+			current_level.swap(next_level);
 		}
 	}
 
-	//	Traverse trie until substring not found
-	//	Check for a space
-	if (word[letter] == ' ') {
-		//	space was found -> Traverse all children
-		for (auto itr = child_.begin(); itr != child_.end(); itr++) {
-			itr->second->TrySparsePrefix(word, letter+1, word_list);
-		}
-	} else {
-		if (!child_.count(word[letter])) {
-			//	This substring is not in the trie
-			return;
+	//	Output the result
+	if (word_list->size() != 0)
+		return (word_list);
+	else return nullptr;
+}
+
+/*
+void Trie::PrintChildren() {
+	for (auto itr = child_.begin(); itr != child_.end(); ++itr)
+		std::cout << itr->first << std::endl;
+}
+*/
+
+std::unique_ptr<WordList> Trie::SparsePrefix(const std::string &word) {
+	//	Main method for prefix searching
+	if (word.size() < 1) return nullptr;
+
+	//	The word list
+	std::unique_ptr<WordList> word_list = std::make_unique<WordList>();
+
+	//	The Depth-Level Queue to process
+	std::queue<std::shared_ptr<TrieNode>> current_level;
+	current_level.push(this->root_);
+
+	//	Run the search
+	uint16_t letter = 0;
+	std::shared_ptr<TrieNode> current;
+	while (letter != word.size() && !current_level.empty()) {
+		//	The Depth-Level Queue to load onto for the next iteration
+		std::queue<std::shared_ptr<TrieNode>> next_level;
+		//	Unload the node
+		current = current_level.front();
+		//	Perform on its children
+		//
+		//	Check for a space
+		if (word[letter] == ' ') {
+			//	space was found -> Traverse all children
+			for (auto itr = current->children.begin(); itr != current->children.end(); itr++) {
+				//	Add it to the queue
+				next_level.push(itr->second);
+			}
 		} else {
-			//	Test the next letter
-			child_[word[letter]]->TrySparsePrefix(word, letter+1, word_list);
+			//	no space -> Try the letter of the node's child
+			if (current->children.count(word[letter])) {
+					//	The letter is in current -> load
+					next_level.push(current->children[word[letter]]);
+			}
+		}
+		//	Remove the node
+		current_level.pop();
+
+		//	Prepare for the next iteration
+		current_level.swap(next_level);
+		letter++;
+	}
+
+	//	Can we traverse to find words?
+	if (letter == word.size() && !current_level.empty()) {
+		//	Traverse and add all nodes
+		while (!current_level.empty()) {
+		//	The Depth-Level Queue to load onto for the next iteration
+			std::queue<std::shared_ptr<TrieNode>> next_level;
+			//	Unload the node
+			current = current_level.front();
+			//	Perform on its children
+			//
+			//	Traverse every child
+			for (auto itr = current->children.begin(); itr != current->children.end(); itr++) {
+				if (itr->first == endSymbol_) {
+					//	A word was reached -> push it
+					word_list->push_back(current->GetWord());
+				} else {
+					//	Push this child onto the queue
+					next_level.push(itr->second);
+				}
+			}
+
+			//	Remove the node
+			current_level.pop();
+			//	Prepare for the next iteration
+			current_level.swap(next_level);
 		}
 	}
 
-	return;
+	//	Output the result
+	if (word_list->size() != 0)
+		return (word_list);
+	else return nullptr;
 }
