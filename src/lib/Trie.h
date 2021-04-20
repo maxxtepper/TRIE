@@ -32,6 +32,11 @@ class Trie {
 		//	Find sparse prefix in trie
 		std::unique_ptr<WordList> SparsePrefix(const std::string &word);
 
+		//	Give a suffix, get a list
+		std::unique_ptr<WordList> SuffixList(const std::string &word);
+		//	Find sparse suffix in trie
+		std::unique_ptr<WordList> SparseSuffix(const std::string &word);
+
 		//	Object Essentials
 		uint64_t Count() { return node_count_; }
 		//void PrintChildren();
@@ -43,6 +48,9 @@ class Trie {
 	private:
 		//	The root node of this trie
 		std::shared_ptr<TrieNode> root_;
+
+		//	The map to all nodes in the trie by char
+		std::multimap<char, std::shared_ptr<TrieNode>> node_char_list_;
 
 		//	The node count
 		uint64_t node_count_;

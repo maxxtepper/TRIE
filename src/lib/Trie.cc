@@ -24,7 +24,10 @@ bool Trie::insert(const std::string &word) {
 			//	The letter was not found; add a new node
 			std::shared_ptr<TrieNode> trie_node = std::make_shared<TrieNode>(letter, subword);
 			auto letter_ptr_pair = std::make_pair(letter, trie_node);
-			current->children.insert(std::move(letter_ptr_pair));
+			//	Put it in the trie
+			current->children.insert(letter_ptr_pair);
+			//	Put it in the level list
+			this->node_char_list_.insert(letter_ptr_pair);
 			node_count_++;
 		}
 		//	Go to next node
@@ -278,6 +281,54 @@ std::unique_ptr<WordList> Trie::SparsePrefix(const std::string &word) {
 			}
 			//	Prepare for the next iteration
 			current_level.swap(next_level);
+		}
+	}
+
+	//	Sort the output
+	std::sort(word_list->begin(), word_list->end());
+
+	//	Output the result
+	if (word_list->size() != 0)
+		return (word_list);
+	else return nullptr;
+}
+
+std::unique_ptr<WordList> Trie::SuffixList(const std::string &word) {
+	//	Main method for prefix searching
+	if (word.size() < 1) return nullptr;
+
+	//	The word list
+	std::unique_ptr<WordList> word_list = std::make_unique<WordList>();
+
+	//	The current node to process
+	std::shared_ptr<TrieNode> current;
+	//	Load the depth level into the queue
+	uint16_t letter = 0;
+	std::cout << word[letter] << std::endl;
+	auto node_char = node_char_list_.equal_range(word[letter]);
+	for (auto itr = node_char.first; itr != node_char.second; itr++) {
+		std::cout << "Checking...\n";
+		//	Prep for this traverse
+		letter = 1;
+		current = itr->second;
+		//	Traverse this node to the suffixs end
+		while (letter != word.size()) {
+			std::cout << "Looking for " <<	word[letter];
+			if (current->children.count(word[letter])) {
+					//	The letter is in current -> load
+					std::cout << "found!\n";
+					current = current->children[word[letter]];
+					letter++;
+			} else break;
+		}
+
+		//	Did we reach the end?
+		if (letter == word.size()) {
+			//	Push if end is found
+			if (current->children.count(endSymbol_)) {
+				word_list->push_back(current->GetWord());
+				std::cout << "Got word: " << current->GetWord() << std::endl;
+			}
 		}
 	}
 
