@@ -4,6 +4,7 @@ Trie::Trie() {
 	std::shared_ptr<TrieNode> trie_node = std::make_shared<TrieNode>('#', "");
 	this->root_ = trie_node;
 	this->endSymbol_ = '*';
+	this->node_count_ = 0;
 }
 
 bool Trie::insert(const std::string &word) {
@@ -19,7 +20,7 @@ bool Trie::insert(const std::string &word) {
 		//	Add the letter to the subword
 		subword.push_back(letter);
 		//	See if this letter already exists in this node
-		if (current->children.find(letter) == current->children.end()) {
+		if (!current->children.count(letter)) {
 			//	The letter was not found; add a new node
 			std::shared_ptr<TrieNode> trie_node = std::make_shared<TrieNode>(letter, subword);
 			auto letter_ptr_pair = std::make_pair(letter, trie_node);
@@ -46,7 +47,7 @@ bool Trie::find(const std::string &word) {
 	//	Loop down until the whole word is found or something is not found
 	for (char letter : word) {
 		//	See if this letter exists in this node
-		if (current->children.find(letter) == current->children.end()) {
+		if (!current->children.count(letter)) {
 			//	Not found
 			return false;
 		}
@@ -55,7 +56,7 @@ bool Trie::find(const std::string &word) {
 	}
 
 	//	At the end of word, check for termination
-	if (current->children.find(endSymbol_) == current->children.end())
+	if (!current->children.count(endSymbol_))
 		return false;
 	else
 		return true;

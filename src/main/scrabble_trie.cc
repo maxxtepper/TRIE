@@ -5,7 +5,7 @@
 #include <vector>
 #include <chrono>
 #include <unistd.h>
-#include "src/lib/TrieNode.h"
+#include "src/lib/Trie.h"
 
 int main(int argc, char** argv) {
 	//	Directory handeling
@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 	std::string word_file = argv[2];
 
 	//	Data Objects
-	TrieNode trie('#',"");
+	Trie trie;
 
 	//	CSV Parsing Setup
 	std::stringstream ss;
