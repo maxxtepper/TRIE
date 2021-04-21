@@ -10,11 +10,11 @@ I needed to convert it from dos to unix
 GetList can only return prefix searches for the moment
 
 Upcoming:
--Find me words with letter x in position y
-	-SparseWord:
-		"b b" gives bib, bob, bub
-	-SparsePrefix:
-		"b b" gives all the words that have "b b" as a prefix, where the space acts the same as the end of the prefix
+SparseEntry-
+	-SparseWord has barriers on the beginning and end of the word
+	-SparsePrefix has a barrier on the beginning of the word
+	-SparseSuffix has a barrier on the end of the word
+	-SparseEnty will have no barriers on the ends of the word
 
 -Create word-letter depth lists for each node (projected memory use: ~640MB)
 -Suffix searching

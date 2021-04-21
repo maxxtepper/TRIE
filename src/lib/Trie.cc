@@ -387,3 +387,64 @@ void Trie::SparseSuffixTraverse(std::shared_ptr<TrieNode> &trienode, const std::
 	return;
 }
 
+std::unique_ptr<WordList> Trie::SparseEntry(const std::string &word) {
+	//	Main method for prefix searching
+	if (word.size() < 1) return nullptr;
+
+	//	Catch wrong use of sparse
+	if (word[0] == ' ') return nullptr;
+
+	//	The word list
+	std::unique_ptr<WordList> word_list = std::make_unique<WordList>();
+
+	//	The current node to process
+	uint16_t letter = 0;
+	auto node_char = node_char_list_.equal_range(word[letter]);
+	for (auto itr = node_char.first; itr != node_char.second; itr++) {
+		SparseEntryTraverse(itr->second, word, letter+1, word_list);
+	}
+
+	//	Sort the output
+	std::sort(word_list->begin(), word_list->end());
+	//	Remove the duplicates
+	word_list->erase(std::unique(word_list->begin(), word_list->end()), word_list->end());
+
+	//	Output the result
+	if (word_list->size() != 0)
+		return (word_list);
+	else return nullptr;
+}
+
+void Trie::SparseEntryTraverse(std::shared_ptr<TrieNode> &trienode, const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
+	//	Check for end of word
+	if (letter >= word.size()) {
+		//	Call traverse on each letter
+		for (auto itr = trienode->children.begin(); itr != trienode->children.end(); itr++) {
+			//	Push if end is found
+			if (itr->second == nullptr) {
+				word_list->push_back(trienode->GetWord());
+			} else {
+				//	Letter does not change here, it keeps us locked in
+				SparseEntryTraverse(itr->second, word, letter, word_list);
+			}
+		}
+
+		return;
+	}
+
+	//	Check for a space
+	if (word[letter] == ' ') {
+		//	Call traverse on each letter
+		for (auto itr = trienode->children.begin(); itr != trienode->children.end(); itr++) {
+			if (itr->second != nullptr)
+				SparseEntryTraverse(itr->second, word, letter+1, word_list);
+		}
+	} else {
+		//	Find a letter
+		if (trienode->children.count(word[letter])) {
+			SparseEntryTraverse(trienode->children[word[letter]], word, letter+1, word_list);
+		}
+	}
+	return;
+}
+

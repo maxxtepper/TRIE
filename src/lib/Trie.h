@@ -38,6 +38,9 @@ class Trie {
 		//	Find sparse suffix in trie
 		std::unique_ptr<WordList> SparseSuffix(const std::string &word);
 
+		//	Find sparse entry in trie
+		std::unique_ptr<WordList> SparseEntry(const std::string &word);
+
 		//	Object Essentials
 		uint64_t Count() { return node_count_; }
 		//void PrintChildren();
@@ -61,6 +64,7 @@ class Trie {
 
 		//	Private methods
 		void SparseSuffixTraverse(std::shared_ptr<TrieNode> &trienode, const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
+		void SparseEntryTraverse(std::shared_ptr<TrieNode> &trienode, const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
 };
 
 #endif

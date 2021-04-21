@@ -63,6 +63,7 @@ int main(int argc, char** argv) {
 		std::cout << "4. Sparse Word List\n";
 		std::cout << "5. Sparse Prefix List\n";
 		std::cout << "6. Sparse Suffix List\n";
+		std::cout << "7. Sparse Entry List\n";
 		std::cout << "0. Quit\n";
 		std::cout << "Choice: ";
 		std::cin >> mode;
@@ -185,6 +186,28 @@ int main(int argc, char** argv) {
 					std::getline(std::cin, input);
 					if (input != "0") {
 						std::unique_ptr<WordList> word_list = trie.SparseSuffix(input);
+						if (word_list != nullptr) {
+							std::for_each(word_list->begin(), word_list->end(), [](std::string i) {
+								std::cout << i << std::endl;
+							});
+							std::cout << "List size = " << word_list->size() << std::endl;
+						}
+						else
+							std::cout << "Empty List!\n";
+					}
+				}
+				break;
+			}
+			case 7:
+			{
+				std::string input = "";
+				//	Recycle the input
+				std::getline(std::cin, input);
+				while (input != "0") {
+					std::cout << "Enter a sparse entry (0 to quit): ";
+					std::getline(std::cin, input);
+					if (input != "0") {
+						std::unique_ptr<WordList> word_list = trie.SparseEntry(input);
 						if (word_list != nullptr) {
 							std::for_each(word_list->begin(), word_list->end(), [](std::string i) {
 								std::cout << i << std::endl;
