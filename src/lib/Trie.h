@@ -9,6 +9,7 @@
 #include <vector>
 #include <unordered_map>
 #include <queue>
+#include <stack>
 #include "TrieNode.h"
 
 typedef std::vector<std::string> WordList;
@@ -57,6 +58,9 @@ class Trie {
 
 		//	End symbol
 		char endSymbol_;
+
+		//	Private methods
+		void SparseSuffixTraverse(std::shared_ptr<TrieNode> &trienode, const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list);
 };
 
 #endif

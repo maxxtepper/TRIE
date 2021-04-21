@@ -64,6 +64,7 @@ TEST(TrieShould, PlaySparsePrefix){
 	word_list->push_back("pill");
 	word_list->push_back("fall");
 	word_list->push_back("bye");
+	word_list->push_back("shallow");
 	for (std::string word : *word_list) {
 		trie->insert(word);
 	}

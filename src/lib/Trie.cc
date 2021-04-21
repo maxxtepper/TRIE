@@ -302,21 +302,16 @@ std::unique_ptr<WordList> Trie::SuffixList(const std::string &word) {
 
 	//	The current node to process
 	std::shared_ptr<TrieNode> current;
-	//	Load the depth level into the queue
 	uint16_t letter = 0;
-	std::cout << word[letter] << std::endl;
 	auto node_char = node_char_list_.equal_range(word[letter]);
 	for (auto itr = node_char.first; itr != node_char.second; itr++) {
-		std::cout << "Checking...\n";
 		//	Prep for this traverse
 		letter = 1;
 		current = itr->second;
 		//	Traverse this node to the suffixs end
 		while (letter != word.size()) {
-			std::cout << "Looking for " <<	word[letter];
 			if (current->children.count(word[letter])) {
 					//	The letter is in current -> load
-					std::cout << "found!\n";
 					current = current->children[word[letter]];
 					letter++;
 			} else break;
@@ -327,7 +322,6 @@ std::unique_ptr<WordList> Trie::SuffixList(const std::string &word) {
 			//	Push if end is found
 			if (current->children.count(endSymbol_)) {
 				word_list->push_back(current->GetWord());
-				std::cout << "Got word: " << current->GetWord() << std::endl;
 			}
 		}
 	}
@@ -340,3 +334,56 @@ std::unique_ptr<WordList> Trie::SuffixList(const std::string &word) {
 		return (word_list);
 	else return nullptr;
 }
+
+std::unique_ptr<WordList> Trie::SparseSuffix(const std::string &word) {
+	//	Main method for prefix searching
+	if (word.size() < 1) return nullptr;
+
+	//	Catch wrong use of sparse
+	if (word[0] == ' ') return nullptr;
+
+	//	The word list
+	std::unique_ptr<WordList> word_list = std::make_unique<WordList>();
+
+	//	The current node to process
+	uint16_t letter = 0;
+	auto node_char = node_char_list_.equal_range(word[letter]);
+	for (auto itr = node_char.first; itr != node_char.second; itr++) {
+		SparseSuffixTraverse(itr->second, word, letter+1, word_list);
+	}
+
+	//	Sort the output
+	std::sort(word_list->begin(), word_list->end());
+
+	//	Output the result
+	if (word_list->size() != 0)
+		return (word_list);
+	else return nullptr;
+}
+
+void Trie::SparseSuffixTraverse(std::shared_ptr<TrieNode> &trienode, const std::string &word, uint16_t letter, std::unique_ptr<WordList> &word_list) {
+	//	Check for end of word
+	if (letter == word.size()) {
+		//	Push if end is found
+		if (trienode->children.count(endSymbol_)) {
+			word_list->push_back(trienode->GetWord());
+		}
+		return;
+	}
+
+	//	Check for a space
+	if (word[letter] == ' ') {
+		//	Call traverse on each letter
+		for (auto itr = trienode->children.begin(); itr != trienode->children.end(); itr++) {
+			if (itr->second != nullptr)
+				SparseSuffixTraverse(itr->second, word, letter+1, word_list);
+		}
+	} else {
+		//	Find a letter
+		if (trienode->children.count(word[letter])) {
+			SparseSuffixTraverse(trienode->children[word[letter]], word, letter+1, word_list);
+		}
+	}
+	return;
+}
+
