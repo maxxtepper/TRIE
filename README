@@ -1,21 +1,30 @@
 This is a basic TRIE data structure
 
 Right now, I am using it to load the dictionary of legal scrabble words
+I am using an official list of scrabble words I got from the official people of scrabble words (I paid money, so it is not posted in here)
 
+A free list of words to play with can be found here (it is not official):
 $ git clone https://github.com/zeisler/scrabble
+I needed to convert it from dos to unix; and make sure it ends in csv
+Make sure to change the name of the file in src/main/scrabble_trie.cc (it is hard coded for now)
 
-I am using scrabble/db/dictionary.csv
-I needed to convert it from dos to unix
+To build:
+bazel build //src/main:all
 
-GetList can only return prefix searches for the moment
+Methods:
+insert- add a string to the trie
+find- returns a bool of a search for the existance of a string
+SparseWord- returns a list of all the strings with a length equal to word, with spaces in word acting as a wildcard position
+PrefixList- returns a list of all the strings with word as a prefix
+SparsePrefix- returns a list of all the strings with word as a prefix, with spaces in that prefix acting as a wildcard position 
+SuffixList- returns a list of all the strings with word as a suffix
+SparseSuffix- returns a list of all the string with word as a suffix, with spaces in that suffix acting as a wildcard position
+SparseEntry- returns a list of all the strings with wildcards at the prefix and suffix, with spaces in that entry acting as a wildcard position
 
 Upcoming:
-SparseEntry-
-	-SparseWord has barriers on the beginning and end of the word
-	-SparsePrefix has a barrier on the beginning of the word
-	-SparseSuffix has a barrier on the end of the word
-	-SparseEnty will have no barriers on the ends of the word
-
 -Create word-letter depth lists for each node (projected memory use: ~640MB)
 -Suffix searching
 -Word jumping
+
+FUN FACT:
+SparseWord can be used for Wordle (for academic purposes, of course)
